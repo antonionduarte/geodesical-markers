@@ -83,6 +83,10 @@ function getFirstValueByTagName(xml, name) {
 	return getAllValuesByTagName(xml, name)[0].childNodes[0].nodeValue;
 }
 
+function between(x, y, z) {
+	return x >= y && x <= z;
+}
+
 /* POI */
 
 class POI {
@@ -94,35 +98,52 @@ class POI {
 }
 
 class VG extends POI {
-  constructor(xml) {
-    super(xml);
-    this.altitude = getFirstValueByTagName(xml, "altitude");
-    this.type = getFirstValueByTagName(xml, "type");
-  }
+	constructor(xml) {
+		super(xml);
+		this.order = getFirstValueByTagName(xml, "order");
+		this.altitude = getFirstValueByTagName(xml, "altitude");
+		this.type = getFirstValueByTagName(xml, "type");
+	}
+
+	distanceTo(other) {
+		return Math.hypot(this.latitude - other.latitude, this.longitude - other.longitude);
+	}
 }
 
 class VG1 extends VG {
-  constructor(xml) {
-    super(xml);
-  }
+	constructor(xml) {
+		super(xml);
+	}
+
+	validDistance(other) {
+		return between(this.distanceTo(other), 30, 60);
+	}
 }
 
 class VG2 extends VG {
-  constructor(xml) {
-    super(xml);
-  }
+	constructor(xml) {
+		super(xml);
+	}
+
+	validDistance(other) {
+		return between(this.distanceTo(other), 20, 30);
+	}
 }
 
 class VG3 extends VG {
-  constructor(xml) {
-    super(xml);
-  }
+	constructor(xml) {
+		super(xml);
+	}
+
+	validDistance(other) {
+		return between(this.distanceTo(other), 5, 10);
+	}
 }
 
 class VG4 extends VG {
-  constructor(xml) {
-    super(xml);
-  }
+	constructor(xml) {
+		super(xml);
+	}
 }
 
 /* MAP */
@@ -135,10 +156,7 @@ class Map {
 		let vgs = this.loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
 		this.populate(icons, vgs);
 		this.addClickHandler((e) =>
-			L.popup()
-				.setLatLng(e.latlng)
-				.setContent("You clicked the map at " + e.latlng.toString())
-		);
+			L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
 	}
 
 	makeMapLayer(name, spec) {
