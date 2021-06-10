@@ -38,7 +38,7 @@ const RGN_FILE_NAME = "rgn.xml";
 
 /* Global Variables */
 
-let map = null;
+let map;
 
 /* Useful Functions */
 
@@ -264,5 +264,5 @@ function onLoad() {
 }
 
 function updateViewableLayers(order) {
-	
+
 }
