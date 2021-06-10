@@ -96,14 +96,33 @@ class POI {
 class VG extends POI {
   constructor(xml) {
     super(xml);
-    this.order = getFirstValueByTagName(xml, "order");
     this.altitude = getFirstValueByTagName(xml, "altitude");
     this.type = getFirstValueByTagName(xml, "type");
   }
 }
 
 class VG1 extends VG {
-  constructor() {}
+  constructor() {
+    super();
+  }
+}
+
+class VG2 extends VG {
+  constructor() {
+    super();
+  }
+}
+
+class VG3 extends VG {
+  constructor() {
+    super();
+  }
+}
+
+class VG4 extends VG {
+  constructor() {
+    super();
+  }
 }
 
 /* MAP */
