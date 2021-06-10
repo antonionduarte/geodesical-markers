@@ -229,9 +229,23 @@ class Map {
 			icon: icons["order" + vg.order],
 		});
 		marker
-			.bindPopup("I'm the marker of VG <b>" + vg.name + "</b>.")
-			.bindTooltip(vg.name)
-			.addTo(this.lmap);
+      .bindPopup(
+        "I'm the marker of VG <b>" +
+          vg.name +
+          "</b>.<br/>" +
+          "<b>Order:</b> " +
+          vg.order +
+          "<br/><b>Type:</b> " +
+          vg.type +
+          "<br/><b>Latitude:</b> " +
+          vg.latitude +
+          "<br/><b>Longitude:</b> " +
+          vg.longitude +
+          "<br/><b>Altitude:</b> " +
+          vg.altitude
+      )
+      .bindTooltip(vg.name)
+      .addTo(this.lmap);
 	}
 
 	addClickHandler(handler) {
@@ -264,5 +278,9 @@ function onLoad() {
 }
 
 function updateViewableLayers(order) {
+
+}
+
+function numVisibleMarkers() {
 
 }
