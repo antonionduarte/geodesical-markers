@@ -237,12 +237,12 @@ class Map {
           vg.order +
           "<br/><b>Type:</b> " +
           vg.type +
+		  "<br/><b>Altitude:</b> " +
+          vg.altitude +
           "<br/><b>Latitude:</b> " +
           vg.latitude +
           "<br/><b>Longitude:</b> " +
-          vg.longitude +
-          "<br/><b>Altitude:</b> " +
-          vg.altitude
+          vg.longitude
       )
       .bindTooltip(vg.name)
       .addTo(this.lmap);
