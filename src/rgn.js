@@ -106,7 +106,7 @@ class VG extends POI {
 	}
 
 	distanceTo(other) {
-		return Math.hypot(this.latitude - other.latitude, this.longitude - other.longitude);
+		return haversine(this.latitude, this.longitude, other.latitude, other.longitude);
 	}
 }
 
