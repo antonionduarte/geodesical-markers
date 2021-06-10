@@ -50,13 +50,13 @@
 		<b>&nbsp;&nbsp;&nbsp;&nbsp;Control</b>
 		<br/>&nbsp;&nbsp;&nbsp;&nbsp;
 		<img src="resources/order1.png" alt="order1" />
-		<input type="checkbox" id="order1" checked onchange="checkboxUpdate(this)"/>
+		<input type="checkbox" id="order1" checked onchange="checkboxUpdate(this); updateViewableLayers(1);"/>
 		<img src="resources/order2.png" alt="order2" />
-		<input type="checkbox" id="order2" checked onchange="checkboxUpdate(this)"/>
+		<input type="checkbox" id="order2" checked onchange="checkboxUpdate(this); updateViewableLayers(2);"/>
 		<img src="resources/order3.png" alt="order3" />
-		<input type="checkbox" id="order3" checked onchange="checkboxUpdate(this)"/>
+		<input type="checkbox" id="order3" checked onchange="checkboxUpdate(this); updateViewableLayers(3);"/>
 		<img src="resources/order4.png" alt="order4" />
-		<input type="checkbox" id="order4" checked onchange="checkboxUpdate(this)"/>
+		<input type="checkbox" id="order4" checked onchange="checkboxUpdate(this); updateViewableLayers(4);"/>
 		<br/>&nbsp;&nbsp;&nbsp;&nbsp;
 
 		<br />&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" id="hello" value="Hello World!" onClick="alert('Hello World!')">
