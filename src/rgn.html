@@ -1,26 +1,24 @@
 <!DOCTYPE html>
-<HTML>
+<html>
 
 <!--
-Rede Geodésica Nacional
+	Rede Geodésica Nacional
 
-0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+	0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
 -->
 
-
-<HEAD>
-	<TITLE>Linguagens e Ambientes de Programação (2020/2021) [Eng.Inf. - DI/FCT/UNL] - 3º projeto prático (Javascript)
-	</TITLE>
-	<META charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+	<title>Linguagens e Ambientes de Programação (2020/2021) [Eng.Inf. - DI/FCT/UNL] - 3º projeto prático (Javascript)
+	</title>
+	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
 		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
 		crossorigin="" />
 	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
 		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
 		crossorigin=""></script>
-
-	<SCRIPT TYPE="text/javascript" SRC="rgn.js"></SCRIPT>
-	<STYLE>
+	<script type="text/javascript" src="rgn.js"></script>
+	<style>
 		html,
 		body {
 			font-size: 12px;
@@ -34,18 +32,11 @@ Rede Geodésica Nacional
 			padding: 0;
 			margin: 0;
 		}
-	</STYLE>
-</HEAD>
+	</style>
+</head>
 
-
-
-
-
-
-
-<BODY ONLOAD="onLoad()">
-
-	<DIV STYLE="position: fixed; top: 0px; left: 0px; height: 100%; width: 200px; background: pink">
+<body onload="onLoad()">
+	<div style="position: fixed; top: 0px; left: 0px; height: 100%; width: 200px; background: pink">
 		<H2>Rede Geodésica Nacional</H2>
 
 		<hr><b>Autores:</b> <br />
@@ -65,23 +56,18 @@ Rede Geodésica Nacional
 		<input type="checkbox" id="order4" checked onchange="checkboxUpdate(this)" />
 		<br />&nbsp;&nbsp;&nbsp;&nbsp;
 
-		<br /><INPUT TYPE="button" ID="hello" VALUE="Olá olá!" ONCLICK="alert('Olá olá!')">
+		<br /><input type="button" id="hello" value="Olá olá!" onClick="alert('Olá olá!')">
 		<br />
 		<br />&nbsp;&nbsp;&nbsp;&nbsp;Etc.
 
 		<hr><b>Estatísticas:</b>
-		<br />&nbsp;&nbsp;VGs visíveis: <SPAN id='visible_caches'>0</SPAN>
+		<br />&nbsp;&nbsp;VGs visíveis: <span id='visible_caches'> 0 </span>
 		<br />
 		<br />&nbsp;&nbsp;&nbsp;&nbsp;Etc.
-
 		<hr>
-	</DIV>
-
-
-
-
+	</div>
 
 	<div id="mapid" style="position: fixed; top: 0px; left: 200px; width: 100%; height: 100%;"></div>
-</BODY>
+</body>
 
-</HTML>
+</html>
