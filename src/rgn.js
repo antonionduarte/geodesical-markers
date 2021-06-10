@@ -10,7 +10,7 @@ HTML DOM documentation: https://www.w3schools.com/js/js_htmldom.asp
 Leaflet documentation: https://leafletjs.com/reference-1.7.1.html
 */
 
-/* GLOBAL CONSTANTS */
+/* Global Constants */
 
 const MAP_CENTRE = [38.661, -9.2044]; // FCT coordinates
 const MAP_ID = "mapid";
@@ -36,11 +36,11 @@ const RESOURCES_DIR = "resources/";
 const VG_ORDERS = ["order1", "order2", "order3", "order4"];
 const RGN_FILE_NAME = "rgn.xml";
 
-/* GLOBAL VARIABLES */
+/* Global Variables */
 
 let map = null;
 
-/* USEFUL FUNCTIONS */
+/* Useful Functions */
 
 // Capitalize the first letter of a string.
 function capitalize(str) {
@@ -146,7 +146,7 @@ class VG4 extends VG {
 	}
 }
 
-/* MAP */
+/* Map */
 
 class Map {
 	constructor(center, zoom) {
@@ -256,7 +256,7 @@ class Map {
 	}
 }
 
-/* FUNCTIONS for HTML */
+/* Functions for HTML */
 
 function onLoad() {
 	map = new Map(MAP_CENTRE, 12);
