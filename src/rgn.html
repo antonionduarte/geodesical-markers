@@ -36,15 +36,18 @@
 </head>
 
 <body onload="onLoad()">
-	<div style="position: fixed; top: 0px; left: 0px; height: 100%; width: 200px; background: pink">
-		<H2>Rede Geodésica Nacional</H2>
+	<div id="mapid" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%;"></div>
 
-		<hr><b>Autores:</b> <br />
-		&nbsp;&nbsp;&nbsp;&nbsp; Gonçalo Virgínia - 56773 <br />
-		&nbsp;&nbsp;&nbsp;&nbsp; Antonio Duarte - 58278 <br />
+	<div style="position: fixed; top: 0px; right: 0px; height: 100%; width: 250px; background: rgba(0, 0, 0, 0.8)">
+		<font color = 'white'>
+		<H2>&nbsp;&nbsp;&nbsp;&nbsp;National Geodesic Markers</H2>
+
+		<hr><b>&nbsp;&nbsp;&nbsp;&nbsp;Authors:</b> <br />
+		&nbsp;&nbsp;&nbsp;&nbsp;Gonçalo Virgínia - 56773 <br />
+		&nbsp;&nbsp;&nbsp;&nbsp;Antonio Duarte - 58278 <br />
 
 		<hr>
-		<b>Controlo:</b>
+		<b>&nbsp;&nbsp;&nbsp;&nbsp;Control</b>
 		<br/>&nbsp;&nbsp;&nbsp;&nbsp;
 		<img src="resources/order1.png" alt="order1" />
 		<input type="checkbox" id="order1" checked onchange="checkboxUpdate(this)"/>
@@ -56,18 +59,21 @@
 		<input type="checkbox" id="order4" checked onchange="checkboxUpdate(this)"/>
 		<br/>&nbsp;&nbsp;&nbsp;&nbsp;
 
-		<br /><input type="button" id="hello" value="Olá olá!" onClick="alert('Olá olá!')">
+		<br />&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" id="hello" value="Olá olá!" onClick="alert('Olá olá!')">
 		<br />
 		<br />&nbsp;&nbsp;&nbsp;&nbsp;Etc.
 
-		<hr><b>Estatísticas:</b>
-		<br />&nbsp;&nbsp;VGs visíveis: <span id='visible_caches'> 0 </span>
-		<br />
-		<br />&nbsp;&nbsp;&nbsp;&nbsp;Etc.
 		<hr>
-	</div>
 
-	<div id="mapid" style="position: fixed; top: 0px; left: 200px; width: 100%; height: 100%;"></div>
+		<b>&nbsp;&nbsp;&nbsp;&nbsp;Estatísticas:</b> <br>
+		&nbsp;&nbsp;&nbsp;&nbsp;VGs visíveis: <span id='visible_caches'> 0 </span> <br>
+		&nbsp;&nbsp;&nbsp;&nbsp;<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;Etc.
+
+		<hr>
+
+		</font>
+	</div>
 </body>
 
 </html>
