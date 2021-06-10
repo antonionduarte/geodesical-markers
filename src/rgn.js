@@ -102,26 +102,26 @@ class VG extends POI {
 }
 
 class VG1 extends VG {
-  constructor() {
-    super();
+  constructor(xml) {
+    super(xml);
   }
 }
 
 class VG2 extends VG {
-  constructor() {
-    super();
+  constructor(xml) {
+    super(xml);
   }
 }
 
 class VG3 extends VG {
-  constructor() {
-    super();
+  constructor(xml) {
+    super(xml);
   }
 }
 
 class VG4 extends VG {
-  constructor() {
-    super();
+  constructor(xml) {
+    super(xml);
   }
 }
 
