@@ -230,6 +230,7 @@ class Map {
 		this.vgs = loadRGN(RESOURCES_DIR + RGN_FILE_NAME); // loads the VGs | TODO: probably needs to work differently?
 		this.populate(this.icons, this.vgs); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
+		this.vgLayerGroups = [].fill(L.layerGroup(), 0, VG_ORDERS.length);
 	}
 
 	/* Configures a specific map layer */
@@ -279,6 +280,10 @@ class Map {
 				this.addMarker(icons, order[j]);
 			}
 		}
+
+		for (let i in this.vgLayerGroups) {
+			this.vgLayerGroups[i].addTo(this.lmap);
+		}
 	}
 
 	addMarker(icons, vg) {
@@ -300,8 +305,9 @@ class Map {
           	vg.latitude +
           	"<br/><b>Longitude:</b> " +
           	vg.longitude
-     	).bindTooltip(vg.name)
-       .addTo(this.lmap);
+     	).bindTooltip(vg.name);
+		
+		this.vgLayerGroups[vg.order - 1].addLayer(marker);
 	}
 
 	addClickHandler(handler) {
