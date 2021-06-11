@@ -113,6 +113,7 @@ class VG extends POI {
 		this.order = order;
 		this.type = type;
 		this.altitude = altitude;
+		this.marker;
 	}
 
 	distanceTo(other) {
