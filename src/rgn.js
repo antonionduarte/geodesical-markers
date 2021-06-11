@@ -330,7 +330,7 @@ class Map {
      	).bindTooltip(vg.name);
 
 		vg.marker = marker;
-		this.vgOrders[vg.order-1].layerGroup.addLayer(marker);
+		this.vgOrders[vg.order - 1].layerGroup.addLayer(marker);
 	}
 
 	addClickHandler(handler) {
@@ -406,7 +406,6 @@ function toggleLayerGroupVisibility(order) {
 }
 
 function updateStatistics() {
-
 	// visible markers
 	let totalVisibleMarkers = 0;
 	
