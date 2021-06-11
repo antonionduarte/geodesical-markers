@@ -268,7 +268,6 @@ class Map {
 	}
 
 	addMarker(icons, vg) {
-		console.log('Pila ' +  vg.order + ' TESTE');
 		let marker = L.marker([vg.latitude, vg.longitude], {
 			icon: icons["order" + vg.order],
 		});
