@@ -287,7 +287,7 @@ class Map {
 		}
 
 		for (let order in VG_ORDERS) {
-			this.vgLayerGroups[i].addTo(this.lmap);
+			this.vgLayerGroups[order].addTo(this.lmap);
 		}
 	}
 
