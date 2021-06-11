@@ -227,7 +227,6 @@ class Map {
 		this.lmap = L.map(MAP_ID).setView(center, zoom); // creates the map with the specific view
 		this.addBaseLayers(MAP_LAYERS); // the several different "map styles", such as satellite, streets etc ...
 		this.icons = loadIcons(RESOURCES_DIR); // loads the icons
-		this.numVisibleMarkers = 0;
 		this.vgs = loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
 		this.vgLayerGroups = [];
 
