@@ -227,10 +227,15 @@ class Map {
 		this.lmap = L.map(MAP_ID).setView(center, zoom); // creates the map with the specific view
 		this.addBaseLayers(MAP_LAYERS); // the several different "map styles", such as satellite, streets etc ...
 		this.icons = loadIcons(RESOURCES_DIR); // loads the icons
-		this.vgs = loadRGN(RESOURCES_DIR + RGN_FILE_NAME); // loads the VGs | TODO: probably needs to work differently?
+		this.vgs = loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
+		this.vgLayerGroups = [];
+
+    	for (let order in VG_ORDERS) {
+      		this.vgLayerGroups.push(L.layerGroup());
+    	}
+
 		this.populate(this.icons, this.vgs); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
-		this.vgLayerGroups = [].fill(L.layerGroup(), 0, VG_ORDERS.length);
 	}
 
 	/* Configures a specific map layer */
@@ -281,7 +286,7 @@ class Map {
 			}
 		}
 
-		for (let i in this.vgLayerGroups) {
+		for (let order in VG_ORDERS) {
 			this.vgLayerGroups[i].addTo(this.lmap);
 		}
 	}
@@ -306,7 +311,8 @@ class Map {
           	"<br/><b>Longitude:</b> " +
           	vg.longitude
      	).bindTooltip(vg.name);
-		
+
+		vg.marker = marker;
 		this.vgLayerGroups[vg.order - 1].addLayer(marker);
 	}
 
