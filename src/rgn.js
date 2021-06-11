@@ -99,10 +99,10 @@ function between(x, y, z) {
 function loadRGN(filename) {
 	let xmlDoc = loadXMLDoc(filename);
 	let xs = getAllValuesByTagName(xmlDoc, "vg");
-	let vgs = [];
+	let vgOrders = [];
 
 	for (let order in VG_ORDERS) {
-		vgs.push([]);
+		vgOrders.push(new VGOrderCollection());
 	}
 
 	if (xs.length == 0) {
@@ -119,22 +119,22 @@ function loadRGN(filename) {
 
 			switch (getFirstValueByTagName(xs[i], "order")) {
 				case '1':
-					vgs[0].push(new VG1(name, type, altitude, latitude, longitude));
+					vgOrders[0].addVG(new VG1(name, type, altitude, latitude, longitude));
 					break;
 				case '2':
-					vgs[1].push(new VG2(name, type, altitude, latitude, longitude));
+					vgOrders[1].addVG(new VG2(name, type, altitude, latitude, longitude));
 					break;
 				case '3':
-					vgs[2].push(new VG3(name, type, altitude, latitude, longitude));
+					vgOrders[2].addVG(new VG3(name, type, altitude, latitude, longitude));
 					break;
 				case '4':
-					vgs[3].push(new VG4(name, type, altitude, latitude, longitude));
+					vgOrders[3].addVG(new VG4(name, type, altitude, latitude, longitude));
 					break;
 			}
 		}
 	}
 
-	return vgs;
+	return vgOrders;
 }
 
 /* Loads the icons */
@@ -157,6 +157,31 @@ function loadIcons(dir) {
 	}
 
 	return icons;
+}
+
+/* Collections */
+
+class VGOrderCollection {
+	constructor() {
+		this.vgs = [];
+		this.visible = true;
+		this.lowestVG = null;
+		this.highestVG = null;
+	}
+
+	addVG(vg) {
+		this.vgs.push(vg);
+
+		if (!isNaN(vg.altitude)) {
+			if ((this.highestVG == null) || (vg.altitude > this.highestVG.altitude)) {
+				this.highestVG = vg;
+			}
+	
+			if ((this.lowestVG == null) || (vg.altitude < this.lowestVG.altitude)) {
+				this.lowestVG = vg;
+			}
+		}
+	}
 }
 
 /* POI */
@@ -226,21 +251,20 @@ class Map {
 		this.lmap = L.map(MAP_ID).setView(center, zoom); // creates the map with the specific view
 		this.addBaseLayers(MAP_LAYERS); // the several different "map styles", such as satellite, streets etc ...
 		this.icons = loadIcons(RESOURCES_DIR); // loads the icons
-		this.vgs = loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
+		this.vgOrders = loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
 		this.vgLayerGroups = [];
-
-		for (let order in VG_ORDERS) {
-				this.vgLayerGroups.push(L.layerGroup());
-		}
-
-		this.populate(this.icons, this.vgs); // populates everything with VGs and their respective markers
-		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
-
 		this.numVisibleMarkers = 0;
-
+		this.lowestVG = null;
+		this.highestVG = null;	
+		
 		for (let order in VG_ORDERS) {
-			this.numVisibleMarkers += this.vgs[order].length;
+			this.numVisibleMarkers += this.vgOrders[order].vgs.length;
+			this.vgLayerGroups.push(L.layerGroup());
 		}
+		
+		this.populate(this.icons, this.vgOrders); // populates everything with VGs and their respective markers
+		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));	
+		this.updateStatistics();
 	}
 
 	/* Configures a specific map layer */
@@ -283,16 +307,12 @@ class Map {
 	}
 
 	/* Populates the map with all icons and VGs */
-	populate(icons, vgs) {
-		for (let i in vgs) {
-			let order = vgs[i]
-			for (let j in order) {
-				this.addMarker(icons, order[j]);
+	populate(icons, vgOrders) {
+		for (let i in vgOrders) {
+			this.vgLayerGroups[i].addTo(this.lmap);
+			for (let j in vgOrders[i].vgs) {
+				this.addMarker(icons, vgOrders[i].vgs[j]);
 			}
-		}
-
-		for (let order in VG_ORDERS) {
-			this.vgLayerGroups[order].addTo(this.lmap);
 		}
 	}
 
@@ -319,7 +339,6 @@ class Map {
 
 		vg.marker = marker;
 		this.vgLayerGroups[vg.order - 1].addLayer(marker);
-		this.numVisibleMarkers += 1;
 	}
 
 	addClickHandler(handler) {
@@ -343,15 +362,38 @@ class Map {
 		return circle;
 	}
 
-	updateVisibleLayerGroups(order) {
-		if (this.lmap.hasLayer(this.vgLayerGroups[order])) {
+	toggleLayerGroupVisiblity(order) {
+		if (this.vgOrders[order].visible) {
 			this.lmap.removeLayer(this.vgLayerGroups[order]);
-			this.numVisibleMarkers -= this.vgs[order].length;
+			this.numVisibleMarkers -= this.vgOrders[order].vgs.length;
 		}
 		else {
 			this.lmap.addLayer(this.vgLayerGroups[order]);
-			this.numVisibleMarkers += this.vgs[order].length;
+			this.numVisibleMarkers += this.vgOrders[order].vgs.length;
 		}
+
+		this.vgOrders[order].visible = !this.vgOrders[order].visible;
+		this.updateStatistics;
+	}
+
+	updateStatistics() {
+		let lowestVG = null;
+		let highestVG = null;
+
+		for (let order in VG_ORDERS) {
+			if (this.vgOrders[order].visible) {
+				if (lowestVG == null || this.vgOrders[order].lowestVG.altitude < lowestVG.altitude) {
+					lowestVG = this.vgOrders[order].lowestVG;
+				}
+	
+				if (highestVG == null || this.vgOrders[order].highestVG.altitude > highestVG.altitude) {
+					highestVG = this.vgOrders[order].highestVG;
+				}
+			}
+		}
+
+		this.highestVG = highestVG;
+		this.lowestVG = lowestVG;
 	}
 }
 
@@ -360,21 +402,29 @@ class Map {
 function onLoad() {
 	map = new Map(MAP_CENTRE, 12);
 	map.addCircle(MAP_CENTRE, 100, "FCT/UNL");
-	numVisibleMarkers();
+	updateStatistics();
 }
 
 function updateVisibleLayerGroups(order) {
-	map.updateVisibleLayerGroups(order);
-	numVisibleMarkers();
+	map.toggleLayerGroupVisiblity(order);
+	updateStatistics();
 }
 
-function numVisibleMarkers() {
+function updateStatistics() {
 	// total visible Markers
 	document.getElementById('total_visible').innerHTML = map.numVisibleMarkers;
 	
 	// partial total, for each Marker Order
-	document.getElementById('visible_order1').innerHTML
-	document.getElementById('visible-order2').innerHTML
-	document.getElementById('visible-order3').innerHTML
-	document.getElementById('visible-order4').innerHTML
+	for (let order in VG_ORDERS)  {
+		if (map.vgOrders[order].visible) {
+			document.getElementById(VG_ORDERS[order] + '_visible').innerHTML = map.vgOrders[order].vgs.length;
+		}
+		else {
+			document.getElementById(VG_ORDERS[order] + '_visible').innerHTML = 0;
+		}
+	}
+
+	// lowest and highest marker
+	document.getElementById('highest_visible').innerHTML = map.highestVG.name;
+	document.getElementById('lowest_visible').innerHTML = map.lowestVG.name;
 }
