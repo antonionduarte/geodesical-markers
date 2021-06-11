@@ -336,6 +336,15 @@ class Map {
 		}
 		return circle;
 	}
+
+	updateVisibleLayerGroups(order) {
+		if (this.lmap.hasLayer(this.vgLayerGroups[order])) {
+			this.lmap.removeLayer(this.vgLayerGroups[order]);
+		}
+		else {
+			this.lmap.addLayer(this.vgLayerGroups[order]);
+		}
+	}
 }
 
 /* Functions for HTML */
@@ -345,8 +354,8 @@ function onLoad() {
 	map.addCircle(MAP_CENTRE, 100, "FCT/UNL");
 }
 
-function updateVisibleLayers(order) {
-
+function updateVisibleLayerGroups(order) {
+	map.updateVisibleLayerGroups(order);
 }
 
 function numVisibleMarkers() {
