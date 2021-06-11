@@ -122,7 +122,7 @@ class VG extends POI {
 
 class VG1 extends VG {
 	constructor(name, type, altitude, latitude, longitude) {
-		super(name, type, altitude, latitude, 1, longitude);
+		super(name, 1, type, altitude, latitude, longitude);
 	}
 
 	validDistance(other) {
@@ -132,7 +132,7 @@ class VG1 extends VG {
 
 class VG2 extends VG {
 	constructor(name, type, altitude, latitude, longitude) {
-		super(name, type, altitude, latitude, 2, longitude);
+		super(name, 2, type, altitude, latitude, longitude);
 	}
 
 	validDistance(other) {
@@ -142,7 +142,7 @@ class VG2 extends VG {
 
 class VG3 extends VG {
 	constructor(name, type, altitude, latitude, longitude) {
-		super(name, type, altitude, latitude, 3, longitude);
+		super(name, 3, type, altitude, latitude, longitude);
 	}
 
 	validDistance(other) {
@@ -152,7 +152,7 @@ class VG3 extends VG {
 
 class VG4 extends VG {
 	constructor(name, type, altitude, latitude, longitude) {
-		super(name, type, altitude, latitude, 4, longitude);
+		super(name, 4, type, altitude, latitude, longitude);
 	}
 }
 
@@ -233,7 +233,11 @@ class Map {
 	loadRGN(filename) {
 		let xmlDoc = loadXMLDoc(filename);
 		let xs = getAllValuesByTagName(xmlDoc, "vg");
-		let vgs;
+		let vgs = [];
+
+		for (let order in VG_ORDERS) {
+			vgs.push([]);
+		}
 
 		if (xs.length == 0) {
 			alert("Empty file");
@@ -269,9 +273,10 @@ class Map {
 
 	/* Populates the map with all icons and VGs */
 	populate(icons, vgs) {
-		for (let order in vgs) {
-			for (let vg in order) {
-				this.addMarker(icons, vg);
+		for (let i in vgs) {
+			let order = vgs[i]
+			for (let j in order) {
+				this.addMarker(icons, order[j]);
 			}
 		}
 	}
