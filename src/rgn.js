@@ -31,6 +31,7 @@ const MAP_ERROR =
 
 
 const MAP_LAYERS = [
+	"navigation-night-v1",
 	"streets-v11",
 	"outdoors-v11",
 	"light-v10",
@@ -38,7 +39,6 @@ const MAP_LAYERS = [
 	"satellite-v9",
 	"satellite-streets-v11",
 	"navigation-day-v1",
-	"navigation-night-v1",
 ];
 const RESOURCES_DIR = "resources/";
 
@@ -227,6 +227,7 @@ class Map {
 		this.lmap = L.map(MAP_ID).setView(center, zoom); // creates the map with the specific view
 		this.addBaseLayers(MAP_LAYERS); // the several different "map styles", such as satellite, streets etc ...
 		this.icons = loadIcons(RESOURCES_DIR); // loads the icons
+		this.numVisibleMarkers = 0;
 		this.vgs = loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
 		this.vgLayerGroups = [];
 
@@ -314,6 +315,7 @@ class Map {
 
 		vg.marker = marker;
 		this.vgLayerGroups[vg.order - 1].addLayer(marker);
+		this.numVisibleMarkers += 1;
 	}
 
 	addClickHandler(handler) {
@@ -340,9 +342,11 @@ class Map {
 	updateVisibleLayerGroups(order) {
 		if (this.lmap.hasLayer(this.vgLayerGroups[order])) {
 			this.lmap.removeLayer(this.vgLayerGroups[order]);
+			this.numVisibleMarkers -= this.vgs[order].length;
 		}
 		else {
 			this.lmap.addLayer(this.vgLayerGroups[order]);
+			this.numVisibleMarkers += this.vgs[order].length;
 		}
 	}
 }
@@ -352,12 +356,14 @@ class Map {
 function onLoad() {
 	map = new Map(MAP_CENTRE, 12);
 	map.addCircle(MAP_CENTRE, 100, "FCT/UNL");
+	numVisibleMarkers();
 }
 
 function updateVisibleLayerGroups(order) {
 	map.updateVisibleLayerGroups(order);
+	numVisibleMarkers();
 }
 
 function numVisibleMarkers() {
-
+	document.getElementById('visible_caches').innerHTML = map.numVisibleMarkers;
 }
