@@ -229,7 +229,7 @@ class Map {
 	loadRGN(filename) {
 		let xmlDoc = loadXMLDoc(filename);
 		let xs = getAllValuesByTagName(xmlDoc, "vg");
-		let vgs = [];
+		let vgs;
 
 		if (xs.length == 0) {
 			alert("Empty file");
@@ -245,16 +245,16 @@ class Map {
 
 				switch (getFirstValueByTagName(xs[i], "order")) {
 					case '1':
-						vgs[i] = new VG1(name, type, altitude, latitude, longitude);
+						vgs[0].push(new VG1(name, type, altitude, latitude, longitude));
 						break;
 					case '2':
-						vgs[i] = new VG2(name, type, altitude, latitude, longitude);
+						vgs[1].push(new VG2(name, type, altitude, latitude, longitude));
 						break;
 					case '3':
-						vgs[i] = new VG3(name, type, altitude, latitude, longitude);
+						vgs[2].push(new VG3(name, type, altitude, latitude, longitude));
 						break;
 					case '4':
-						vgs[i] = new VG4(name, type, altitude, latitude, longitude);
+						vgs[3].push(new VG4(name, type, altitude, latitude, longitude));
 						break;
 				}
 			}
@@ -264,7 +264,11 @@ class Map {
 	}
 
 	populate(icons, vgs) {
-		for (let i = 0; i < vgs.length; i++) this.addMarker(icons, vgs[i]);
+		for (let order in vgs) {
+			for (let vg in order) {
+				this.addMarker(icons, vg);
+			}
+		}
 	}
 
 	addMarker(icons, vg) {
