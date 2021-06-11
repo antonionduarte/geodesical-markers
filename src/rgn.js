@@ -160,14 +160,15 @@ class VG4 extends VG {
 
 class Map {
 	constructor(center, zoom) {
-		this.lmap = L.map(MAP_ID).setView(center, zoom);
-		this.addBaseLayers(MAP_LAYERS);
-		let icons = this.loadIcons(RESOURCES_DIR);
-		let vgs = this.loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
-		this.populate(icons, vgs);
+		this.lmap = L.map(MAP_ID).setView(center, zoom); // creates the map with the specific view
+		this.addBaseLayers(MAP_LAYERS); // the several different "map styles", such as satellite, streets etc ...
+		let icons = this.loadIcons(RESOURCES_DIR); // loads the icons
+		let vgs = this.loadRGN(RESOURCES_DIR + RGN_FILE_NAME); // loads the VGs | TODO: probably needs to work differently?
+		this.populate(icons, vgs); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
 	}
 
+	/* Configures a specific map layer */
 	makeMapLayer(name, spec) {
 		let urlTemplate = MAP_URL;
 		let attr = MAP_ATTRIBUTION;
@@ -184,6 +185,7 @@ class Map {
 		return layer;
 	}
 
+	/* Adds te base map/tile layers */
 	addBaseLayers(specs) {
 		let baseMaps = [];
 
@@ -205,6 +207,7 @@ class Map {
 		return baseMaps;
 	}
 
+	/* Loads the icons */
 	loadIcons(dir) {
 		let icons = [];
 
@@ -226,6 +229,7 @@ class Map {
 		return icons;
 	}
 
+	/* Loads the VGs from the XML (probably should be somewhere else) */
 	loadRGN(filename) {
 		let xmlDoc = loadXMLDoc(filename);
 		let xs = getAllValuesByTagName(xmlDoc, "vg");
@@ -238,10 +242,10 @@ class Map {
 		else {
 			for (let i = 0; i < xs.length; i++) {
 				let name = getFirstValueByTagName(xs[i], "name"),
-				type = getFirstValueByTagName(xs[i], "type"),
-				altitude = getFirstValueByTagName(xs[i], "altitude"),
-				latitude = getFirstValueByTagName(xs[i], "latitude"),
- 				longitude = getFirstValueByTagName(xs[i], "longitude");
+						type = getFirstValueByTagName(xs[i], "type"),
+						altitude = getFirstValueByTagName(xs[i], "altitude"),
+						latitude = getFirstValueByTagName(xs[i], "latitude"),
+ 						longitude = getFirstValueByTagName(xs[i], "longitude");
 
 				switch (getFirstValueByTagName(xs[i], "order")) {
 					case '1':
@@ -263,6 +267,7 @@ class Map {
 		return vgs;
 	}
 
+	/* Populates the map with all icons and VGs */
 	populate(icons, vgs) {
 		for (let i = 0; i < vgs.length; i++) this.addMarker(icons, vgs[i]);
 	}
