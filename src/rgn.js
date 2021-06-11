@@ -272,24 +272,23 @@ class Map {
 		let marker = L.marker([vg.latitude, vg.longitude], {
 			icon: icons["order" + vg.order],
 		});
-		marker
-			.bindPopup(
-				"I'm the marker of VG <b>" +
-				vg.name +
-				"</b>.<br/>" +
-				"<b>Order:</b> " +
-				vg.order +
-				"<br/><b>Type:</b> " +
-				vg.type +
-				"<br/><b>Latitude:</b> " +
-				vg.latitude +
-				"<br/><b>Longitude:</b> " +
-				vg.longitude +
-				"<br/><b>Altitude:</b> " +
-				vg.altitude
-			)
-			.bindTooltip(vg.name)
-			.addTo(this.lmap);
+		marker.bindPopup(
+			"I'm the marker of VG <b>" +
+          	vg.name +
+          	"</b>.<br/>" +
+          	"<b>Order:</b> " +
+          	vg.order +
+          	"<br/><b>Type:</b> " +
+          	vg.type +
+		  	"<br/><b>Altitude:</b> " +
+          	vg.altitude +
+          	"<br/><b>Latitude:</b> " +
+          	vg.latitude +
+          	"<br/><b>Longitude:</b> " +
+          	vg.longitude
+     	)
+      .bindTooltip(vg.name)
+      .addTo(this.lmap);
 	}
 
 	addClickHandler(handler) {
@@ -321,7 +320,7 @@ function onLoad() {
 	map.addCircle(MAP_CENTRE, 100, "FCT/UNL");
 }
 
-function updateViewableLayers(order) {
+function updateVisibleLayers(order) {
 
 }
 
