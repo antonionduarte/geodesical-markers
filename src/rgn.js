@@ -424,7 +424,19 @@ function updateStatistics() {
 		}
 	}
 
+	map.updateStatistics();
+
 	// lowest and highest marker
-	document.getElementById('highest_visible').innerHTML = map.highestVG.name;
-	document.getElementById('lowest_visible').innerHTML = map.lowestVG.name;
+	let highestVGName = 'NA';
+	if (!(map.highestVG == null)) {
+		highestVGName = map.highestVG.name;
+	}
+
+	let lowestVGName = 'NA';
+	if (!(map.lowestVG == null)) {
+		lowestVGName = map.lowestVG.name;
+	}
+
+	document.getElementById('highest_visible').innerHTML = highestVGName;
+	document.getElementById('lowest_visible').innerHTML = lowestVGName;
 }
