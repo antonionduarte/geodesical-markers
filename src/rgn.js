@@ -230,9 +230,9 @@ class Map {
 		this.vgs = loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
 		this.vgLayerGroups = [];
 
-    	for (let order in VG_ORDERS) {
-      		this.vgLayerGroups.push(L.layerGroup());
-    	}
+		for (let order in VG_ORDERS) {
+				this.vgLayerGroups.push(L.layerGroup());
+		}
 
 		this.populate(this.icons, this.vgs); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
