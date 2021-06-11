@@ -97,6 +97,69 @@ function between(x, y, z) {
 	return x >= y && x <= z;
 }
 
+function loadRGN(filename) {
+	let xmlDoc = loadXMLDoc(filename);
+	let xs = getAllValuesByTagName(xmlDoc, "vg");
+	let vgs = [];
+
+	for (let order in VG_ORDERS) {
+		vgs.push([]);
+	}
+
+	if (xs.length == 0) {
+		alert("Empty file");
+	}
+
+	else {
+		for (let i = 0; i < xs.length; i++) {
+			let name = getFirstValueByTagName(xs[i], "name"),
+					type = getFirstValueByTagName(xs[i], "type"),
+					altitude = getFirstValueByTagName(xs[i], "altitude"),
+					latitude = getFirstValueByTagName(xs[i], "latitude"),
+					longitude = getFirstValueByTagName(xs[i], "longitude");
+
+			switch (getFirstValueByTagName(xs[i], "order")) {
+				case '1':
+					vgs[0].push(new VG1(name, type, altitude, latitude, longitude));
+					break;
+				case '2':
+					vgs[1].push(new VG2(name, type, altitude, latitude, longitude));
+					break;
+				case '3':
+					vgs[2].push(new VG3(name, type, altitude, latitude, longitude));
+					break;
+				case '4':
+					vgs[3].push(new VG4(name, type, altitude, latitude, longitude));
+					break;
+			}
+		}
+	}
+
+	return vgs;
+}
+
+/* Loads the icons */
+function loadIcons(dir) {
+	let icons = [];
+
+	let iconOptions = {
+		iconUrl: "??",
+		shadowUrl: "??",
+		iconSize: [16, 16],
+		shadowSize: [16, 16],
+		iconAnchor: [8, 8],
+		shadowAnchor: [8, 8],
+		popupAnchor: [0, -6], // offset the determines where the popup should open
+	};
+
+	for (let i = 0; i < VG_ORDERS.length; i++) {
+		iconOptions.iconUrl = dir + VG_ORDERS[i] + ".png";
+		icons[VG_ORDERS[i]] = L.icon(iconOptions);
+	}
+
+	return icons;
+}
+
 /* POI */
 
 class POI {
@@ -162,9 +225,9 @@ class Map {
 	constructor(center, zoom) {
 		this.lmap = L.map(MAP_ID).setView(center, zoom); // creates the map with the specific view
 		this.addBaseLayers(MAP_LAYERS); // the several different "map styles", such as satellite, streets etc ...
-		let icons = this.loadIcons(RESOURCES_DIR); // loads the icons
-		let vgs = this.loadRGN(RESOURCES_DIR + RGN_FILE_NAME); // loads the VGs | TODO: probably needs to work differently?
-		this.populate(icons, vgs); // populates everything with VGs and their respective markers
+		this.icons = loadIcons(RESOURCES_DIR); // loads the icons
+		this.vgs = loadRGN(RESOURCES_DIR + RGN_FILE_NAME); // loads the VGs | TODO: probably needs to work differently?
+		this.populate(this.icons, this.vgs); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
 	}
 
@@ -207,70 +270,6 @@ class Map {
 		return baseMaps;
 	}
 
-	/* Loads the icons */
-	loadIcons(dir) {
-		let icons = [];
-
-		let iconOptions = {
-			iconUrl: "??",
-			shadowUrl: "??",
-			iconSize: [16, 16],
-			shadowSize: [16, 16],
-			iconAnchor: [8, 8],
-			shadowAnchor: [8, 8],
-			popupAnchor: [0, -6], // offset the determines where the popup should open
-		};
-
-		for (let i = 0; i < VG_ORDERS.length; i++) {
-			iconOptions.iconUrl = dir + VG_ORDERS[i] + ".png";
-			icons[VG_ORDERS[i]] = L.icon(iconOptions);
-		}
-
-		return icons;
-	}
-
-	/* Loads the VGs from the XML (probably should be somewhere else) */
-	loadRGN(filename) {
-		let xmlDoc = loadXMLDoc(filename);
-		let xs = getAllValuesByTagName(xmlDoc, "vg");
-		let vgs = [];
-
-		for (let order in VG_ORDERS) {
-			vgs.push([]);
-		}
-
-		if (xs.length == 0) {
-			alert("Empty file");
-		}
-
-		else {
-			for (let i = 0; i < xs.length; i++) {
-				let name = getFirstValueByTagName(xs[i], "name"),
-						type = getFirstValueByTagName(xs[i], "type"),
-						altitude = getFirstValueByTagName(xs[i], "altitude"),
-						latitude = getFirstValueByTagName(xs[i], "latitude"),
- 						longitude = getFirstValueByTagName(xs[i], "longitude");
-
-				switch (getFirstValueByTagName(xs[i], "order")) {
-					case '1':
-						vgs[0].push(new VG1(name, type, altitude, latitude, longitude));
-						break;
-					case '2':
-						vgs[1].push(new VG2(name, type, altitude, latitude, longitude));
-						break;
-					case '3':
-						vgs[2].push(new VG3(name, type, altitude, latitude, longitude));
-						break;
-					case '4':
-						vgs[3].push(new VG4(name, type, altitude, latitude, longitude));
-						break;
-				}
-			}
-		}
-
-		return vgs;
-	}
-
 	/* Populates the map with all icons and VGs */
 	populate(icons, vgs) {
 		for (let i in vgs) {
@@ -285,6 +284,7 @@ class Map {
 		let marker = L.marker([vg.latitude, vg.longitude], {
 			icon: icons["order" + vg.order],
 		});
+		
 		marker.bindPopup(
 			"I'm the marker of VG <b>" +
           	vg.name +
@@ -299,9 +299,8 @@ class Map {
           	vg.latitude +
           	"<br/><b>Longitude:</b> " +
           	vg.longitude
-     	)
-      .bindTooltip(vg.name)
-      .addTo(this.lmap);
+     	).bindTooltip(vg.name)
+       .addTo(this.lmap);
 	}
 
 	addClickHandler(handler) {
