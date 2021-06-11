@@ -237,6 +237,12 @@ class Map {
 
 		this.populate(this.icons, this.vgs); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
+
+		this.numVisibleMarkers = 0;
+
+		for (let order in VG_ORDERS) {
+			this.numVisibleMarkers += this.vgs[order].length;
+		}
 	}
 
 	/* Configures a specific map layer */
