@@ -276,7 +276,7 @@ function onLoad() {
 	map.addCircle(MAP_CENTRE, 100, "FCT/UNL");
 }
 
-function updateViewableLayers(order) {
+function updateVisibleLayers(order) {
 
 }
 
