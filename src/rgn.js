@@ -370,7 +370,7 @@ function updateVisibleLayerGroups(order) {
 
 function numVisibleMarkers() {
 	// total visible Markers
-	document.getElementById('visible_caches').innerHTML = map.numVisibleMarkers;
+	document.getElementById('total_visible').innerHTML = map.numVisibleMarkers;
 	
 	// partial total, for each Marker Order
 	document.getElementById('visible_order1').innerHTML
