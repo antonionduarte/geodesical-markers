@@ -108,11 +108,11 @@ class POI {
 }
 
 class VG extends POI {
-	constructor(name, type, latitude, longitude, order, altitude) {
+	constructor(name, order, type, altitude, latitude, longitude) {
 		super(name, latitude, longitude);
 		this.order = order;
-		this.altitude = altitude;
 		this.type = type;
+		this.altitude = altitude;
 	}
 
 	distanceTo(other) {
@@ -121,8 +121,8 @@ class VG extends POI {
 }
 
 class VG1 extends VG {
-	constructor(name, type, latitude, longitude, altitude) {
-		super(name, type, latitude, longitude, 1, altitude);
+	constructor(name, type, altitude, latitude, longitude) {
+		super(name, type, altitude, latitude, 1, longitude);
 	}
 
 	validDistance(other) {
@@ -131,8 +131,8 @@ class VG1 extends VG {
 }
 
 class VG2 extends VG {
-	constructor(name, type, latitude, longitude, altitude) {
-		super(name, type, latitude, longitude, 2, altitude);
+	constructor(name, type, altitude, latitude, longitude) {
+		super(name, type, altitude, latitude, 2, longitude);
 	}
 
 	validDistance(other) {
@@ -141,8 +141,8 @@ class VG2 extends VG {
 }
 
 class VG3 extends VG {
-	constructor(name, type, latitude, longitude, altitude) {
-		super(name, type, latitude, longitude, 3, altitude);
+	constructor(name, type, altitude, latitude, longitude) {
+		super(name, type, altitude, latitude, 3, longitude);
 	}
 
 	validDistance(other) {
@@ -151,8 +151,8 @@ class VG3 extends VG {
 }
 
 class VG4 extends VG {
-	constructor(name, type, latitude, longitude, altitude) {
-		super(name, type, latitude, longitude, 4, altitude);
+	constructor(name, type, altitude, latitude, longitude) {
+		super(name, type, altitude, latitude, 4, longitude);
 	}
 }
 
@@ -237,24 +237,24 @@ class Map {
 
 		else {
 			for (let i = 0; i < xs.length; i++) {
-				let name = getFirstValueByTagName(xs[i], "name");
-				let type = getFirstValueByTagName(xs[i], "type");
-				let latitude = getFirstValueByTagName(xs[i], "latitude");
- 				let longitude = getFirstValueByTagName(xs[i], "longitude");
-				let altitude = getFirstValueByTagName(xs[i], "altitude");
+				let name = getFirstValueByTagName(xs[i], "name"),
+				type = getFirstValueByTagName(xs[i], "type"),
+				altitude = getFirstValueByTagName(xs[i], "altitude"),
+				latitude = getFirstValueByTagName(xs[i], "latitude"),
+ 				longitude = getFirstValueByTagName(xs[i], "longitude");
 
 				switch (getFirstValueByTagName(xs[i], "order")) {
 					case '1':
-						vgs[i] = new VG1(name, type, latitude, longitude, altitude);
+						vgs[i] = new VG1(name, type, altitude, latitude, longitude);
 						break;
 					case '2':
-						vgs[i] = new VG2(name, type, latitude, longitude, altitude);
+						vgs[i] = new VG2(name, type, altitude, latitude, longitude);
 						break;
 					case '3':
-						vgs[i] = new VG3(name, type, latitude, longitude, altitude);
+						vgs[i] = new VG3(name, type, altitude, latitude, longitude);
 						break;
 					case '4':
-						vgs[i] = new VG4(name, type, latitude, longitude, altitude);
+						vgs[i] = new VG4(name, type, altitude, latitude, longitude);
 						break;
 				}
 			}
