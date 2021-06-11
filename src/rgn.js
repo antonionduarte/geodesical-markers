@@ -427,12 +427,12 @@ function updateStatistics() {
 	map.updateStatistics();
 
 	// lowest and highest marker
-	let highestVGName = 'NA';
+	let highestVGName = 'N/A';
 	if (!(map.highestVG == null)) {
 		highestVGName = map.highestVG.name;
 	}
 
-	let lowestVGName = 'NA';
+	let lowestVGName = 'N/A';
 	if (!(map.lowestVG == null)) {
 		lowestVGName = map.lowestVG.name;
 	}
