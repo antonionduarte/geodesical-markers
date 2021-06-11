@@ -13,15 +13,23 @@ Leaflet documentation: https://leafletjs.com/reference-1.7.1.html
 /* Global Constants */
 
 const MAP_CENTRE = [38.661, -9.2044]; // FCT coordinates
+
 const MAP_ID = "mapid";
+
 const MAP_ATTRIBUTION =
 	'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
 	'contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
+
 const MAP_URL =
 	"https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=" +
 	"pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
-const MAP_ERROR =
+	
 	"https://upload.wikimedia.org/wikipedia/commons/e/e0/SNice.svg";
+
+const MAP_ERROR =
+"https://upload.wikimedia.org/wikipedia/commons/e/e0/SNice.svg";
+
+
 const MAP_LAYERS = [
 	"streets-v11",
 	"outdoors-v11",
@@ -33,7 +41,9 @@ const MAP_LAYERS = [
 	"navigation-night-v1",
 ];
 const RESOURCES_DIR = "resources/";
+
 const VG_ORDERS = ["order1", "order2", "order3", "order4"];
+
 const RGN_FILE_NAME = "rgn.xml";
 
 /* Global Variables */
@@ -90,19 +100,19 @@ function between(x, y, z) {
 /* POI */
 
 class POI {
-	constructor(xml) {
-		this.name = getFirstValueByTagName(xml, "name");
-		this.latitude = getFirstValueByTagName(xml, "latitude");
-		this.longitude = getFirstValueByTagName(xml, "longitude");
+	constructor(name, latitude, longitude) {
+		this.name = name;
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
 }
 
 class VG extends POI {
-	constructor(xml) {
-		super(xml);
-		this.order = getFirstValueByTagName(xml, "order");
-		this.altitude = getFirstValueByTagName(xml, "altitude");
-		this.type = getFirstValueByTagName(xml, "type");
+	constructor(name, type, latitude, longitude, order, altitude) {
+		super(name, latitude, longitude);
+		this.order = order;
+		this.altitude = altitude;
+		this.type = type;
 	}
 
 	distanceTo(other) {
@@ -111,8 +121,8 @@ class VG extends POI {
 }
 
 class VG1 extends VG {
-	constructor(xml) {
-		super(xml);
+	constructor(name, type, latitude, longitude, altitude) {
+		super(name, type, latitude, longitude, 1, altitude);
 	}
 
 	validDistance(other) {
@@ -121,8 +131,8 @@ class VG1 extends VG {
 }
 
 class VG2 extends VG {
-	constructor(xml) {
-		super(xml);
+	constructor(name, type, latitude, longitude, altitude) {
+		super(name, type, latitude, longitude, 2, altitude);
 	}
 
 	validDistance(other) {
@@ -131,8 +141,8 @@ class VG2 extends VG {
 }
 
 class VG3 extends VG {
-	constructor(xml) {
-		super(xml);
+	constructor(name, type, latitude, longitude, altitude) {
+		super(name, type, latitude, longitude, 3, altitude);
 	}
 
 	validDistance(other) {
@@ -141,8 +151,8 @@ class VG3 extends VG {
 }
 
 class VG4 extends VG {
-	constructor(xml) {
-		super(xml);
+	constructor(name, type, latitude, longitude, altitude) {
+		super(name, type, latitude, longitude, 4, altitude);
 	}
 }
 
@@ -155,8 +165,7 @@ class Map {
 		let icons = this.loadIcons(RESOURCES_DIR);
 		let vgs = this.loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
 		this.populate(icons, vgs);
-		this.addClickHandler((e) =>
-			L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
+		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
 	}
 
 	makeMapLayer(name, spec) {
@@ -177,22 +186,28 @@ class Map {
 
 	addBaseLayers(specs) {
 		let baseMaps = [];
-		for (let i in specs)
+
+		for (let i in specs) {
 			baseMaps[capitalize(specs[i])] = this.makeMapLayer(
 				specs[i],
 				"mapbox/" + specs[i]
 			);
+		}
+
 		baseMaps[capitalize(specs[0])].addTo(this.lmap);
+
 		L.control
 			.scale({ maxWidth: 150, metric: true, imperial: false })
 			.setPosition("topleft")
 			.addTo(this.lmap);
+
 		L.control.layers(baseMaps, {}).setPosition("topleft").addTo(this.lmap);
 		return baseMaps;
 	}
 
 	loadIcons(dir) {
 		let icons = [];
+
 		let iconOptions = {
 			iconUrl: "??",
 			shadowUrl: "??",
@@ -202,10 +217,12 @@ class Map {
 			shadowAnchor: [8, 8],
 			popupAnchor: [0, -6], // offset the determines where the popup should open
 		};
+
 		for (let i = 0; i < VG_ORDERS.length; i++) {
 			iconOptions.iconUrl = dir + VG_ORDERS[i] + ".png";
 			icons[VG_ORDERS[i]] = L.icon(iconOptions);
 		}
+
 		return icons;
 	}
 
@@ -213,10 +230,36 @@ class Map {
 		let xmlDoc = loadXMLDoc(filename);
 		let xs = getAllValuesByTagName(xmlDoc, "vg");
 		let vgs = [];
-		if (xs.length == 0) alert("Empty file");
-		else {
-			for (let i = 0; i < xs.length; i++) vgs[i] = new VG(xs[i]);
+
+		if (xs.length == 0) {
+			alert("Empty file");
 		}
+
+		else {
+			for (let i = 0; i < xs.length; i++) {
+				let name = getFirstValueByTagName(xs[i], "name");
+				let type = getFirstValueByTagName(xs[i], "type");
+				let latitude = getFirstValueByTagName(xs[i], "latitude");
+ 				let longitude = getFirstValueByTagName(xs[i], "longitude");
+				let altitude = getFirstValueByTagName(xs[i], "altitude");
+
+				switch (getFirstValueByTagName(xs[i], "order")) {
+					case '1':
+						vgs[i] = new VG1(name, type, latitude, longitude, altitude);
+						break;
+					case '2':
+						vgs[i] = new VG2(name, type, latitude, longitude, altitude);
+						break;
+					case '3':
+						vgs[i] = new VG3(name, type, latitude, longitude, altitude);
+						break;
+					case '4':
+						vgs[i] = new VG4(name, type, latitude, longitude, altitude);
+						break;
+				}
+			}
+		}
+
 		return vgs;
 	}
 
@@ -225,27 +268,28 @@ class Map {
 	}
 
 	addMarker(icons, vg) {
+		console.log('Pila ' +  vg.order + ' TESTE');
 		let marker = L.marker([vg.latitude, vg.longitude], {
 			icon: icons["order" + vg.order],
 		});
 		marker
-      .bindPopup(
-        "I'm the marker of VG <b>" +
-          vg.name +
-          "</b>.<br/>" +
-          "<b>Order:</b> " +
-          vg.order +
-          "<br/><b>Type:</b> " +
-          vg.type +
-          "<br/><b>Latitude:</b> " +
-          vg.latitude +
-          "<br/><b>Longitude:</b> " +
-          vg.longitude +
-          "<br/><b>Altitude:</b> " +
-          vg.altitude
-      )
-      .bindTooltip(vg.name)
-      .addTo(this.lmap);
+			.bindPopup(
+				"I'm the marker of VG <b>" +
+				vg.name +
+				"</b>.<br/>" +
+				"<b>Order:</b> " +
+				vg.order +
+				"<br/><b>Type:</b> " +
+				vg.type +
+				"<br/><b>Latitude:</b> " +
+				vg.latitude +
+				"<br/><b>Longitude:</b> " +
+				vg.longitude +
+				"<br/><b>Altitude:</b> " +
+				vg.altitude
+			)
+			.bindTooltip(vg.name)
+			.addTo(this.lmap);
 	}
 
 	addClickHandler(handler) {
