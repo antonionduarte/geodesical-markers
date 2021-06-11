@@ -14,9 +14,12 @@
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
 		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
 		crossorigin="" />
+	<link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.css" />
+	<link rel="stylesheet" href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.Default.css" />
 	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
 		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
 		crossorigin=""></script>
+	<script src="https://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>
 	<script type="text/javascript" src="rgn.js"></script>
 	<style>
 		html,
@@ -68,12 +71,13 @@
 		<b>&nbsp;&nbsp;&nbsp;&nbsp;Statistics:</b> <br>
 		&nbsp;&nbsp;&nbsp;&nbsp;Visible Markers: <span id='visible_caches'></span> <br>
 		&nbsp;&nbsp;&nbsp;&nbsp;<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;Visible Order 1: <span id='visible_caches'></span> <br>
-		&nbsp;&nbsp;&nbsp;&nbsp;Visible Order 2: <span id='visible_caches'></span> <br>
-		&nbsp;&nbsp;&nbsp;&nbsp;Visible Order 3: <span id='visible_caches'></span> <br>
+		&nbsp;&nbsp;&nbsp;&nbsp;Visible Order 1: <span id='visible_order1'></span> <br>
+		&nbsp;&nbsp;&nbsp;&nbsp;Visible Order 2: <span id='visible_order2'></span> <br>
+		&nbsp;&nbsp;&nbsp;&nbsp;Visible Order 3: <span id='visible_order3'></span> <br>
+		&nbsp;&nbsp;&nbsp;&nbsp;Visible Order 4: <span id='visible_order4'></span> <br>
 		&nbsp;&nbsp;&nbsp;&nbsp;<br>
-
-
+		&nbsp;&nbsp;&nbsp;&nbsp;Highest Marker: <span id='highest_visible'></span> <br>
+		&nbsp;&nbsp;&nbsp;&nbsp;Lowest Marker: <span id='lowest_visible'></span> <br>
 		&nbsp;&nbsp;&nbsp;&nbsp;Etc.
 
 		<hr>
