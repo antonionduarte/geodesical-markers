@@ -457,8 +457,8 @@ class Map {
 			}
 			else {
 				if (order.visible) {
-          			this.lmap.addLayer(order.altitudeCirclesLayerGroup);
-        		}
+					this.lmap.addLayer(order.altitudeCirclesLayerGroup);
+				}
 			}
 		}
 
