@@ -186,7 +186,7 @@ class VGOrderCollection {
 		this.lowestVG = null;
 		this.highestVG = null;
 		this.layerGroup = L.layerGroup();
-		this.circlesGroup = L.layerGroup();
+		this.circlesLayerGroup = L.layerGroup();
 	}
 
 	addVG(vg) {
@@ -208,12 +208,11 @@ class VGOrderCollection {
 				fillOpacity: 0.4,
 			})
 		}
-		
 		else {
 			circle = L.circle([vg.latitude, vg.longitude], 0)
 		}
 
-		this.circlesGroup.addLayer(circle);
+		this.circlesLayerGroup.addLayer(circle);
 	}
 }
 
@@ -389,14 +388,14 @@ class Map {
 			this.lmap.removeLayer(vgOrder.layerGroup);
 			
 			if (vgOrder.altitudeCirclesActive) {
-				this.lmap.removeLayer(vgOrder.circlesGroup)
+				this.lmap.removeLayer(vgOrder.circlesLayerGroup)
 			}
 		}
 		else {
 			this.lmap.addLayer(vgOrder.layerGroup);
 
 			if (vgOrder.altitudeCirclesActive) {
-				this.lmap.addLayer(vgOrder.circlesGroup)
+				this.lmap.addLayer(vgOrder.circlesLayerGroup)
 			}
 		}
 
@@ -435,12 +434,12 @@ class Map {
 
 			if (!order.altitudeCirclesActive) {
 				if (order.visible) {
-					this.lmap.addLayer(order.circlesGroup);
+					this.lmap.addLayer(order.circlesLayerGroup);
 				}
 			}
 			else {
-				if (this.lmap.hasLayer(order.circlesGroup)) {
-					this.lmap.removeLayer(order.circlesGroup);
+				if (this.lmap.hasLayer(order.circlesLayerGroup)) {
+					this.lmap.removeLayer(order.circlesLayerGroup);
 				}
 			}
 
