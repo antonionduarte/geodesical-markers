@@ -110,7 +110,8 @@ function defaultVGPopup(vg) {
           	vg.latitude +
           	"<br/><b>Longitude:</b> " +
           	vg.longitude + 
-			'<br/><input type="button" id="' + vg.name + 'circle_same_type" value="Circle VGs Of Same Type" onClick="toggleSameTypeCircles(vg)"/>';
+			'<br/><input type="button" id="' + vg.name + 'circle_same_type" value="Circle VGs Of Same Type"' + 
+			'onclick="toggleSameTypeCircles("' + vg.name + '","' + vg.type + '")"/>';
 }
 
 function loadRGN(filename) {
