@@ -312,7 +312,10 @@ class Map {
 		this.vgClusterGroup = L.markerClusterGroup();
 		this.altitudeCirclesClusterGroup = L.markerClusterGroup({
 			iconCreateFunction: function() {
-				return L.divIcon({ html:"" });
+				return L.divIcon({
+					html:"",
+					className: "" 
+				});
 			}
 		});
 
