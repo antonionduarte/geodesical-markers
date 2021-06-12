@@ -110,7 +110,7 @@ function defaultVGPopup(vg) {
           	vg.latitude +
           	"<br/><b>Longitude:</b> " +
           	vg.longitude + 
-			'<br/><input type="button" id="' + vg.name + 'circle_same_type" value="Circle VGs Of Same Type" onClick="circleVGsSameType(' + vg.name + ', ' + vg.type + ')"/>';
+			'<br/><input type="button" id="' + vg.name + 'circle_same_type" value="Circle VGs Of Same Type" onClick="toggleSameTypeCircles(vg)"/>';
 }
 
 function loadRGN(filename) {
@@ -481,7 +481,7 @@ class Map {
 	}
 
 	toggleSameTypeCircles(vg) {
-
+		
 	}
 
 	toggleOffSameTypeCircles() {
@@ -553,10 +553,6 @@ function toggleAltitudeCircles() {
 	map.toggleAltitudeCircles(map.vgOrders);
 }
 
-function toggleCircleVGsSameType(vg) {
+function toggleSameTypeCircles(vg) {
 	map.toggleSameTypeCircles(vg);
-}
-
-function toggleClustering() {
-
 }
