@@ -286,7 +286,8 @@ class Map {
 		this.icons = loadIcons(RESOURCES_DIR); // loads the icons
 		this.vgOrders = loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
 		this.populate(); // populates everything with VGs and their respective markers
-		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));	
+		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
+		this.lmap.on('click', this.toggleOffAltitudes);
 	}
 
 	/* Configures a specific map layer */
@@ -374,6 +375,13 @@ class Map {
 		return circle;
 	}
 
+	toggleOffAltitudes() {
+		console.log(this.vgOrders);
+		if (this.vgOrders[0].altitudeCirclesActive) {
+			this.toggleAltitudes();
+		}
+	}
+
 	toggleLayerGroupVisibility(order) {
 		let vgOrder = this.vgOrders[order];
 
@@ -421,7 +429,7 @@ class Map {
 		return highestVG;
 	}
 
-	toggleAltitudeIndicators() {
+	toggleAltitudes() {
 		for (let i in this.vgOrders) {
 			let order = this.vgOrders[i];
 
@@ -495,7 +503,7 @@ function validateVGs() {
 }
 
 function toggleAltitudes() {
-	alert("Hello World!");
+	map.toggleAltitudes();
 }
 
 function toggleClustering() {
