@@ -50,7 +50,7 @@
 		&nbsp;&nbsp;&nbsp;&nbsp;António Duarte - 58278 <br />
 
 		<hr>
-		<b>&nbsp;&nbsp;&nbsp;&nbsp;Control</b>
+		<b>&nbsp;&nbsp;&nbsp;&nbsp;Control:</b>
 		<br/>&nbsp;&nbsp;&nbsp;&nbsp;
 		<img src="resources/order1.png" alt="order1" />
 		<input type="checkbox" id="order1" autocomplete="off" checked onchange="toggleLayerGroupVisibility(0);"/>
@@ -68,15 +68,31 @@
 
 		<hr>
 
-		&nbsp;&nbsp;&nbsp;&nbsp;<b>Statistics:</b> <br>
+		&nbsp;&nbsp;&nbsp;&nbsp;<b>Statistics:</b><br>
 		<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;<b>Visible Markers</b><br>
-		&nbsp;&nbsp;&nbsp;&nbsp;Total: <span id='total_visible'></span><br>
-		&nbsp;&nbsp;&nbsp;&nbsp;<br>
-		&nbsp;&nbsp;&nbsp;&nbsp;Order 1: <span id='order1_visible'></span> <br>
-		&nbsp;&nbsp;&nbsp;&nbsp;Order 2: <span id='order2_visible'></span> <br>
-		&nbsp;&nbsp;&nbsp;&nbsp;Order 3: <span id='order3_visible'></span> <br>
-		&nbsp;&nbsp;&nbsp;&nbsp;Order 4: <span id='order4_visible'></span> <br>
+		&nbsp;&nbsp;&nbsp;&nbsp;<b>Visible Markers</b>
+		<table style="margin-left: 10px; width: 90px">
+			<tr>
+				<td>Total:</td>
+				<td><span id='total_visible'></span></td>
+			</tr>
+			<tr>
+				<td>Order 1</td>
+				<td><span id='order1_visible'></span></td>
+			</tr>
+			<tr>
+				<td>Order 2:</td>
+				<td><span id='order2_visible'></span></td>
+			</tr>
+			<tr>
+				<td>Order 3:</td>
+				<td><span id='order3_visible'></span></td>
+			</tr>
+			<tr>
+				<td>Order 4:</td>
+				<td><span id='order4_visible'></span></td>
+			</tr>
+		</table>
 		&nbsp;&nbsp;&nbsp;&nbsp;<br>
 		&nbsp;&nbsp;&nbsp;&nbsp;Highest Marker: <span id='highest_visible'></span> <br>
 		&nbsp;&nbsp;&nbsp;&nbsp;Lowest Marker: <span id='lowest_visible'></span> <br>
