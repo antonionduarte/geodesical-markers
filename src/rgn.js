@@ -326,7 +326,8 @@ class Map {
           	"<br/><b>Latitude:</b> " +
           	vg.latitude +
           	"<br/><b>Longitude:</b> " +
-          	vg.longitude
+          	vg.longitude + 
+			'<br/><br/>Circle VGs Of Same Order <input type="checkbox" id="circleSameOrder" autocomplete="off" unchecked onchange="toggleCircleSameOrder();" />'
      	).bindTooltip(vg.name);
 
 		vg.marker = marker;
