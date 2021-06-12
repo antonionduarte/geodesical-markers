@@ -304,7 +304,7 @@ class Map {
 		this.clusterGroup = L.markerClusterGroup();
 		this.populate(); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
-		this.lmap.on('click', () => {this.toggleOffAltitudeCircles(); this.toggleOffSameTypeCircles();});
+		this.lmap.on('click', () => {this.toggleOffAltitudes(this.vgOrders); this.toggleOffSameTypeCircles();});
 		this.altitudeCirclesActive = false;
 		this.sameTypeCirclesActive = false;
 	}
@@ -441,15 +441,15 @@ class Map {
 		return highestVG;
 	}
 	
-	toggleOffAltitudeCircles() {
+	toggleOffAltitudes(vgOrders) {
 		if (this.altitudeCirclesActive) {
-			this.toggleAltitudeCircles(this.vgOrders);
+			this.toggleAltitudeCircles(vgOrders);
 		}
 	}
 
-	toggleAltitudeCircles() {
-		for (let i in this.vgOrders) {
-			let order = this.vgOrders[i];
+	toggleAltitudeCircles(vgOrders) {
+		for (let i in vgOrders) {
+			let order = vgOrders[i];
 
 			if (this.altitudeCirclesActive) {
 				if (this.clusterGroup.hasLayer(order.altitudeCirclesLayerGroup)) {
@@ -503,6 +503,10 @@ function toggleLayerGroupVisibility(order) {
 	updateStatistics();
 }
 
+function toggleAltitudeCircles() {
+	map.toggleAltitudeCircles(map.vgOrders);
+}
+
 function updateStatistics() {
 	// visible markers
 	let totalVisibleMarkers = 0;
@@ -547,7 +551,7 @@ function validateVGs() {
 }
 
 function toggleAltitudeCircles() {
-	map.toggleAltitudeCircles();
+	map.toggleAltitudeCircles(map.vgOrders);
 }
 
 function toggleSameTypeCircles(vg) {
