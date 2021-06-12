@@ -28,7 +28,6 @@ const MAP_URL =
 const MAP_ERROR =
 "https://upload.wikimedia.org/wikipedia/commons/e/e0/SNice.svg";
 
-
 const MAP_LAYERS = [
 	"navigation-night-v1",
 	"streets-v11",
@@ -39,6 +38,7 @@ const MAP_LAYERS = [
 	"satellite-streets-v11",
 	"navigation-day-v1",
 ];
+
 const RESOURCES_DIR = "resources/";
 
 const VG_ORDERS = ["order1", "order2", "order3", "order4"];
@@ -165,13 +165,16 @@ class VGOrderCollection {
 	constructor() {
 		this.vgs = [];
 		this.visible = true;
+		this.altitudeCirclesVisible = false;
 		this.lowestVG = null;
 		this.highestVG = null;
 		this.layerGroup = L.layerGroup();
+		this.circlesGroup = L.layerGroup();
 	}
 
 	addVG(vg) {
 		this.vgs.push(vg);
+		let circle;
 
 		if (!isNaN(vg.altitude)) {
 			if ((this.highestVG == null) || (vg.altitude > this.highestVG.altitude)) {
@@ -181,7 +184,19 @@ class VGOrderCollection {
 			if ((this.lowestVG == null) || (vg.altitude < this.lowestVG.altitude)) {
 				this.lowestVG = vg;
 			}
+
+			circle = L.circle([vg.latitude, vg.longitude], vg.altitude * 3, {
+				color: "#88c0d0",
+				fillColor: "#8fbcbb",
+				fillOpacity: 0.4,
+			})
 		}
+		
+		else {
+			circle = L.circle([vg.latitude, vg.longitude], 0)
+		}
+
+		this.circlesGroup.addLayer(circle);
 	}
 }
 
@@ -253,7 +268,6 @@ class Map {
 		this.addBaseLayers(MAP_LAYERS); // the several different "map styles", such as satellite, streets etc ...
 		this.icons = loadIcons(RESOURCES_DIR); // loads the icons
 		this.vgOrders = loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
-		
 		this.populate(); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));	
 	}
@@ -347,19 +361,30 @@ class Map {
 			fillColor: "pink",
 			fillOpacity: 0.4,
 		});
-		circle.addTo(this.lmap);
+
 		if (popup != "") {
 			circle.bindPopup(popup);
 		}
+
 		return circle;
 	}
 
 	toggleLayerGroupVisibility(order) {
-		if (this.vgOrders[order].visible) {
-			this.lmap.removeLayer(this.vgOrders[order].layerGroup);
+		let vgOrder = this.vgOrders[order];
+
+		if (vgOrder.visible) {
+			this.lmap.removeLayer(vgOrder.layerGroup);
+			
+			if (vgOrder.altitudeCirclesActive) {
+				this.lmap.removeLayer(vgOrder.circlesGroup)
+			}
 		}
 		else {
-			this.lmap.addLayer(this.vgOrders[order].layerGroup);
+			this.lmap.addLayer(vgOrder.layerGroup);
+
+			if (vgOrder.altitudeCirclesActive) {
+				this.lmap.addLayer(vgOrder.circlesGroup)
+			}
 		}
 
 		this.vgOrders[order].visible = !this.vgOrders[order].visible;
@@ -376,6 +401,12 @@ class Map {
 		}
 
 		return lowestVG;
+	}
+
+	updateAltitudeIndicators() {
+		for (let order in this.vgOrders) {
+			this.lmap.addLayer(this.vgOrders[order].circlesGroup)
+		}
 	}
 
 	getHighestVG() {
@@ -403,6 +434,10 @@ function onLoad() {
 function toggleLayerGroupVisibility(order) {
 	map.toggleLayerGroupVisibility(order);
 	updateStatistics();
+}
+
+function altitudeIndicators() {
+	map.updateAltitudeIndicators();
 }
 
 function updateStatistics() {
