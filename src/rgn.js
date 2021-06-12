@@ -450,19 +450,19 @@ class Map {
 		for (let i in vgOrders) {
 			let order = vgOrders[i];
 
-			if (!this.altitudeCirclesActive) {
-				if (order.visible) {
-					this.lmap.addLayer(order.altitudeCirclesLayerGroup);
-				}
-			}
-			else {
+			if (this.altitudeCirclesActive) {
 				if (this.lmap.hasLayer(order.altitudeCirclesLayerGroup)) {
 					this.lmap.removeLayer(order.altitudeCirclesLayerGroup);
 				}
 			}
-
-			this.altitudeCirclesActive = !this.altitudeCirclesActive;
+			else {
+				if (order.visible) {
+          			this.lmap.addLayer(order.altitudeCirclesLayerGroup);
+        		}
+			}
 		}
+		
+		this.altitudeCirclesActive = !this.altitudeCirclesActive;
 	}
 
 	validateDistances() {
@@ -485,7 +485,7 @@ class Map {
 	}
 
 	toggleOffSameTypeCircles() {
-		
+
 	}
 }
 
