@@ -165,7 +165,7 @@ class VGOrderCollection {
 	constructor() {
 		this.vgs = [];
 		this.visible = true;
-		this.altitudeCirclesVisible = false;
+		this.altitudeCirclesActive = false;
 		this.lowestVG = null;
 		this.highestVG = null;
 		this.layerGroup = L.layerGroup();
@@ -335,7 +335,7 @@ class Map {
           	vg.order +
           	"<br/><b>Type:</b> " +
           	vg.type +
-		  	"<br/><b>Altitude:</b> " +
+		  			"<br/><b>Altitude:</b> " +
           	vg.altitude +
           	"<br/><b>Latitude:</b> " +
           	vg.latitude +
@@ -349,9 +349,11 @@ class Map {
 
 	addClickHandler(handler) {
 		let m = this.lmap;
+
 		function handler2(e) {
 			return handler(e).openOn(m);
 		}
+		
 		return this.lmap.on("click", handler2);
 	}
 
@@ -403,12 +405,6 @@ class Map {
 		return lowestVG;
 	}
 
-	updateAltitudeIndicators() {
-		for (let order in this.vgOrders) {
-			this.lmap.addLayer(this.vgOrders[order].circlesGroup)
-		}
-	}
-
 	getHighestVG() {
 		let highestVG = null;
 
@@ -420,6 +416,25 @@ class Map {
 		}
 
 		return highestVG;
+	}
+
+	toggleAltitudeIndicators() {
+		for (let i in this.vgOrders) {
+			let order = this.vgOrders[i];
+
+			if (!order.altitudeCirclesActive) {
+				if (order.visible) {
+					this.lmap.addLayer(order.circlesGroup);
+				}
+			}
+			else {
+				if (this.lmap.hasLayer(order.circlesGroup)) {
+					this.lmap.removeLayer(order.circlesGroup);
+				}
+			}
+
+			order.altitudeCirclesActive = !order.altitudeCirclesActive;
+		}
 	}
 }
 
@@ -436,8 +451,8 @@ function toggleLayerGroupVisibility(order) {
 	updateStatistics();
 }
 
-function altitudeIndicators() {
-	map.updateAltitudeIndicators();
+function toggleAltitudes() {
+	map.toggleAltitudeIndicators();
 }
 
 function updateStatistics() {
