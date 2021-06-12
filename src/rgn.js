@@ -186,8 +186,6 @@ class VGOrderCollection {
 		this.lowestVG = null;
 		this.highestVG = null;
 		this.layerGroup = L.layerGroup();
-		this.altitudeCirclesVisible = false;
-		this.sameTypeCirclesVisible = false;
 		this.altitudeCirclesLayerGroup = L.layerGroup();
 		this.sameTypeCirclesLayerGroup = L.layerGroup();
 	}
