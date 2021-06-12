@@ -45,6 +45,21 @@ const VG_ORDERS = ["order1", "order2", "order3", "order4"];
 
 const RGN_FILE_NAME = "rgn.xml";
 
+const DEFAULT_VG_POPUP = "I'm the marker of VG <b>" +
+          	vg.name +
+          	"</b>.<br/>" +
+          	"<b>Order:</b> " +
+          	vg.order +
+          	"<br/><b>Type:</b> " +
+          	vg.type +
+		  	"<br/><b>Altitude:</b> " +
+          	vg.altitude +
+          	"<br/><b>Latitude:</b> " +
+          	vg.latitude +
+          	"<br/><b>Longitude:</b> " +
+          	vg.longitude + 
+			'<br/><br/>Circle VGs Of Same Order <input type="checkbox" id="circleSameOrder" autocomplete="off" unchecked onchange="toggleCircleSameOrder();" />';
+
 /* Global Variables */
 
 let map;
@@ -313,22 +328,7 @@ class Map {
 			icon: icons["order" + vg.order],
 		});
 		
-		marker.bindPopup(
-			"I'm the marker of VG <b>" +
-          	vg.name +
-          	"</b>.<br/>" +
-          	"<b>Order:</b> " +
-          	vg.order +
-          	"<br/><b>Type:</b> " +
-          	vg.type +
-		  	"<br/><b>Altitude:</b> " +
-          	vg.altitude +
-          	"<br/><b>Latitude:</b> " +
-          	vg.latitude +
-          	"<br/><b>Longitude:</b> " +
-          	vg.longitude + 
-			'<br/><br/>Circle VGs Of Same Order <input type="checkbox" id="circleSameOrder" autocomplete="off" unchecked onchange="toggleCircleSameOrder();" />'
-     	).bindTooltip(vg.name);
+		marker.bindPopup(DEFAULT_VG_POPUP).bindTooltip(vg.name);
 
 		vg.marker = marker;
 		this.vgOrders[vg.order-1].layerGroup.addLayer(marker);
