@@ -442,8 +442,8 @@ function validateVGs() {
 	alert("Hello World!");
 }
 
-function toggleAltitude() {
-	
+function toggleAltitudes() {
+	alert("Hello World!");
 }
 
 function toggleClustering() {
