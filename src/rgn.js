@@ -287,7 +287,7 @@ class Map {
 		this.vgOrders = loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
 		this.populate(); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
-		this.lmap.on('click', this.toggleOffAltitudes);
+		this.lmap.on('click', () => this.toggleOffAltitudes(this.vgOrders));
 	}
 
 	/* Configures a specific map layer */
@@ -375,13 +375,6 @@ class Map {
 		return circle;
 	}
 
-	toggleOffAltitudes() {
-		console.log(this.vgOrders);
-		if (this.vgOrders[0].altitudeCirclesActive) {
-			this.toggleAltitudes();
-		}
-	}
-
 	toggleLayerGroupVisibility(order) {
 		let vgOrder = this.vgOrders[order];
 
@@ -428,10 +421,16 @@ class Map {
 
 		return highestVG;
 	}
+	
+	toggleOffAltitudes(vgOrders) {
+		if (vgOrders[0].altitudeCirclesActive) {
+			this.toggleAltitudes(vgOrders);
+		}
+	}
 
-	toggleAltitudes() {
-		for (let i in this.vgOrders) {
-			let order = this.vgOrders[i];
+	toggleAltitudes(vgOrders) {
+		for (let i in vgOrders) {
+			let order = vgOrders[i];
 
 			if (!order.altitudeCirclesActive) {
 				if (order.visible) {
@@ -463,7 +462,7 @@ function toggleLayerGroupVisibility(order) {
 }
 
 function toggleAltitudes() {
-	map.toggleAltitudeIndicators();
+	map.toggleAltitudes(map.vgOrders);
 }
 
 function updateStatistics() {
@@ -503,7 +502,7 @@ function validateVGs() {
 }
 
 function toggleAltitudes() {
-	map.toggleAltitudes();
+	map.toggleAltitudes(map.vgOrders);
 }
 
 function toggleClustering() {
