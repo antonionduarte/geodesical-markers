@@ -183,11 +183,11 @@ class VGOrderCollection {
 		this.vgs = [];
 		this.validDistances = [];
 		this.visible = true;
-		this.altitudeCirclesActive = false;
 		this.lowestVG = null;
 		this.highestVG = null;
 		this.layerGroup = L.layerGroup();
-		this.circlesLayerGroup = L.layerGroup();
+		this.altitudeCirclesLayerGroup = L.layerGroup();
+		this.sameTypeCirclesLayerGroup = L.layerGroup();
 	}
 
 	addVG(vg) {
@@ -225,7 +225,7 @@ class VGOrderCollection {
 		}
 
 		this.vgs.push(vg);
-		this.circlesLayerGroup.addLayer(circle);
+		this.altitudeCirclesLayerGroup.addLayer(circle);
 	}
 }
 
@@ -303,7 +303,9 @@ class Map {
 		this.vgOrders = loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
 		this.populate(); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
-		this.lmap.on('click', () => this.toggleOffAltitudes(this.vgOrders));
+		this.lmap.on('click', () => {this.toggleOffAltitudes(this.vgOrders); this.toggleOffSameTypeCircles();});
+		this.altitudeCirclesActive = false;
+		this.sameTypeCirclesActive = false;
 	}
 
 	/* Configures a specific map layer */
@@ -397,15 +399,15 @@ class Map {
 		if (vgOrder.visible) {
 			this.lmap.removeLayer(vgOrder.layerGroup);
 			
-			if (vgOrder.altitudeCirclesActive) {
-				this.lmap.removeLayer(vgOrder.circlesLayerGroup)
+			if (this.altitudeCirclesActive) {
+				this.lmap.removeLayer(vgOrder.altitudeCirclesLayerGroup)
 			}
 		}
 		else {
 			this.lmap.addLayer(vgOrder.layerGroup);
 
-			if (vgOrder.altitudeCirclesActive) {
-				this.lmap.addLayer(vgOrder.circlesLayerGroup)
+			if (this.altitudeCirclesActive) {
+				this.lmap.addLayer(vgOrder.altitudeCirclesLayerGroup)
 			}
 		}
 
@@ -439,27 +441,27 @@ class Map {
 	}
 	
 	toggleOffAltitudes(vgOrders) {
-		if (vgOrders[0].altitudeCirclesActive) {
-			this.toggleAltitudes(vgOrders);
+		if (this.altitudeCirclesActive) {
+			this.toggleAltitudeCircles(vgOrders);
 		}
 	}
 
-	toggleAltitudes(vgOrders) {
+	toggleAltitudeCircles(vgOrders) {
 		for (let i in vgOrders) {
 			let order = vgOrders[i];
 
-			if (!order.altitudeCirclesActive) {
+			if (!this.altitudeCirclesActive) {
 				if (order.visible) {
-					this.lmap.addLayer(order.circlesLayerGroup);
+					this.lmap.addLayer(order.altitudeCirclesLayerGroup);
 				}
 			}
 			else {
-				if (this.lmap.hasLayer(order.circlesLayerGroup)) {
-					this.lmap.removeLayer(order.circlesLayerGroup);
+				if (this.lmap.hasLayer(order.altitudeCirclesLayerGroup)) {
+					this.lmap.removeLayer(order.altitudeCirclesLayerGroup);
 				}
 			}
 
-			order.altitudeCirclesActive = !order.altitudeCirclesActive;
+			this.altitudeCirclesActive = !this.altitudeCirclesActive;
 		}
 	}
 
@@ -477,6 +479,14 @@ class Map {
 
 		return invalidVGS;
 	}
+
+	toggleSameTypeCircles(vg) {
+
+	}
+
+	toggleOffSameTypeCircles() {
+		
+	}
 }
 
 /* Functions for HTML */
@@ -492,8 +502,8 @@ function toggleLayerGroupVisibility(order) {
 	updateStatistics();
 }
 
-function toggleAltitudes() {
-	map.toggleAltitudes(map.vgOrders);
+function toggleAltitudeCircles() {
+	map.toggleAltitudeCircles(map.vgOrders);
 }
 
 function updateStatistics() {
@@ -539,14 +549,14 @@ function validateVGs() {
 	alert(alertText);
 }
 
-function toggleAltitudes() {
-	map.toggleAltitudes(map.vgOrders);
+function toggleAltitudeCircles() {
+	map.toggleAltitudeCircles(map.vgOrders);
+}
+
+function toggleCircleVGsSameType(vg) {
+	map.toggleSameTypeCircles(vg);
 }
 
 function toggleClustering() {
 
-}
-
-function circleVGsSameType(vg) {
-	
 }
