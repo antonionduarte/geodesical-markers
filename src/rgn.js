@@ -301,7 +301,10 @@ class Map {
 		this.addBaseLayers(MAP_LAYERS); // the several different "map styles", such as satellite, streets etc ...
 		this.icons = loadIcons(RESOURCES_DIR); // loads the icons
 		this.vgOrders = loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
-		this.clusterGroup = L.markerClusterGroup();
+		this.vgClusterGroup = L.markerClusterGroup();
+		this.altitudeCirclesClusterGroup = L.markerClusterGroup();
+		this.lmap.addLayer(this.vgClusterGroup);
+		this.lmap.addLayer(this.altitudeCirclesClusterGroup);
 		this.populate(); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
 		this.lmap.on('click', () => {this.toggleOffAltitudeCircles(); this.toggleOffSameTypeCircles();});
@@ -355,7 +358,7 @@ class Map {
 				this.addMarker(this.icons, this.vgOrders[i].vgs[j]);
 			}
 			
-			this.lmap.addLayer(this.clusterGroup.addLayer(this.vgOrders[i].layerGroup));
+			this.vgClusterGroup.addLayer(this.vgOrders[i].layerGroup);
 		}
 	}
 
@@ -398,17 +401,17 @@ class Map {
 		let vgOrder = this.vgOrders[order];
 
 		if (vgOrder.visible) {
-			this.clusterGroup.removeLayer(vgOrder.layerGroup);
+			this.vgClusterGroup.removeLayer(vgOrder.layerGroup);
 			
 			if (this.altitudeCirclesActive) {
-				this.clusterGroup.removeLayer(vgOrder.altitudeCirclesLayerGroup)
+				this.altitudeCirclesClusterGroup.removeLayer(vgOrder.altitudeCirclesLayerGroup)
 			}
 		}
 		else {
-			this.clusterGroup.addLayer(vgOrder.layerGroup);
+			this.vgClusterGroup.addLayer(vgOrder.layerGroup);
 
 			if (this.altitudeCirclesActive) {
-				this.clusterGroup.addLayer(vgOrder.altitudeCirclesLayerGroup)
+				this.altitudeCirclesClusterGroup.addLayer(vgOrder.altitudeCirclesLayerGroup)
 			}
 		}
 
@@ -452,13 +455,13 @@ class Map {
 			let order = this.vgOrders[i];
 
 			if (this.altitudeCirclesActive) {
-				if (this.clusterGroup.hasLayer(order.altitudeCirclesLayerGroup)) {
-					this.clusterGroup.removeLayer(order.altitudeCirclesLayerGroup);
+				if (this.altitudeCirclesClusterGroup.hasLayer(order.altitudeCirclesLayerGroup)) {
+					this.altitudeCirclesClusterGroup.removeLayer(order.altitudeCirclesLayerGroup);
 				}
 			}
 			else {
 				if (order.visible) {
-					this.clusterGroup.addLayer(order.altitudeCirclesLayerGroup);
+					this.altitudeCirclesClusterGroup.addLayer(order.altitudeCirclesLayerGroup);
 				}
 			}
 		}
