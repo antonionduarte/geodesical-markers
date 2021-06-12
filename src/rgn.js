@@ -111,7 +111,7 @@ function defaultVGPopup(vg) {
           	"<br/><b>Longitude:</b> " +
           	vg.longitude + 
 						'<br/><input type="button" id="' + vg.name + 'circle_same_type" value="Circle VGs Of Same Type"' + 
-						'onclick="toggleSameTypeCircles(' + vg.name + ',' + vg.type + ')"/>';
+						'onclick="toggleSameTypeCircles("' + vg.name + '","' + vg.type + '")"/>';
 }
 
 function loadRGN(filename) {
