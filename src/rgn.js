@@ -455,9 +455,8 @@ class Map {
 			let order = this.vgOrders[i];
 
 			if (this.altitudeCirclesActive) {
-				if (this.altitudeCirclesClusterGroup.hasLayer(order.altitudeCirclesLayerGroup)) {
-					this.altitudeCirclesClusterGroup.removeLayer(order.altitudeCirclesLayerGroup);
-				}
+				this.altitudeCirclesClusterGroup.removeLayer(order.altitudeCirclesLayerGroup);
+				
 			}
 			else {
 				if (order.visible) {
