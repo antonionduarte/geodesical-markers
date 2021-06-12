@@ -301,6 +301,7 @@ class Map {
 		this.addBaseLayers(MAP_LAYERS); // the several different "map styles", such as satellite, streets etc ...
 		this.icons = loadIcons(RESOURCES_DIR); // loads the icons
 		this.vgOrders = loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
+		this.clusterGroup = L.markerClusterGroup();
 		this.populate(); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
 		this.lmap.on('click', () => {this.toggleOffAltitudes(this.vgOrders); this.toggleOffSameTypeCircles();});
@@ -353,8 +354,8 @@ class Map {
 			for (let j in this.vgOrders[i].vgs) {
 				this.addMarker(this.icons, this.vgOrders[i].vgs[j]);
 			}
-
-			this.vgOrders[i].layerGroup.addTo(this.lmap);
+			
+			this.lmap.addLayer(this.clusterGroup.addLayer(this.vgOrders[i].layerGroup));
 		}
 	}
 
@@ -397,17 +398,17 @@ class Map {
 		let vgOrder = this.vgOrders[order];
 
 		if (vgOrder.visible) {
-			this.lmap.removeLayer(vgOrder.layerGroup);
+			this.clusterGroup.removeLayer(vgOrder.layerGroup);
 			
 			if (this.altitudeCirclesActive) {
-				this.lmap.removeLayer(vgOrder.altitudeCirclesLayerGroup)
+				this.clusterGroup.removeLayer(vgOrder.altitudeCirclesLayerGroup)
 			}
 		}
 		else {
-			this.lmap.addLayer(vgOrder.layerGroup);
+			this.clusterGroup.addLayer(vgOrder.layerGroup);
 
 			if (this.altitudeCirclesActive) {
-				this.lmap.addLayer(vgOrder.altitudeCirclesLayerGroup)
+				this.clusterGroup.addLayer(vgOrder.altitudeCirclesLayerGroup)
 			}
 		}
 
@@ -451,13 +452,13 @@ class Map {
 			let order = vgOrders[i];
 
 			if (this.altitudeCirclesActive) {
-				if (this.lmap.hasLayer(order.altitudeCirclesLayerGroup)) {
-					this.lmap.removeLayer(order.altitudeCirclesLayerGroup);
+				if (this.clusterGroup.hasLayer(order.altitudeCirclesLayerGroup)) {
+					this.clusterGroup.removeLayer(order.altitudeCirclesLayerGroup);
 				}
 			}
 			else {
 				if (order.visible) {
-					this.lmap.addLayer(order.altitudeCirclesLayerGroup);
+					this.clusterGroup.addLayer(order.altitudeCirclesLayerGroup);
 				}
 			}
 		}
@@ -481,7 +482,7 @@ class Map {
 	}
 
 	toggleSameTypeCircles(vg) {
-		
+
 	}
 
 	toggleOffSameTypeCircles() {
