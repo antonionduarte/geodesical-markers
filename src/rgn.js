@@ -460,9 +460,9 @@ class Map {
 					this.lmap.removeLayer(order.altitudeCirclesLayerGroup);
 				}
 			}
-
-			this.altitudeCirclesActive = !this.altitudeCirclesActive;
 		}
+		
+		this.altitudeCirclesActive = !this.altitudeCirclesActive;
 	}
 
 	validateDistances() {
