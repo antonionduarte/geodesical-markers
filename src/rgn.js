@@ -461,7 +461,7 @@ class Map {
         		}
 			}
 		}
-		
+
 		this.altitudeCirclesActive = !this.altitudeCirclesActive;
 	}
 
