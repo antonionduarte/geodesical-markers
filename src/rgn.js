@@ -181,6 +181,7 @@ function loadIcons(dir) {
 class VGOrderCollection {
 	constructor() {
 		this.vgs = [];
+		this.validDistances = [];
 		this.visible = true;
 		this.altitudeCirclesActive = false;
 		this.lowestVG = null;
@@ -190,8 +191,19 @@ class VGOrderCollection {
 	}
 
 	addVG(vg) {
-		this.vgs.push(vg);
 		let circle;
+
+		for (let i in this.vgs) {
+			if (vg.validDistance(this.vgs[i])) {
+				if (!this.validDistances.includes(vg)) {
+					this.validDistances.push(vg);
+				}
+
+				if (!this.validDistances.includes(this.vgs[i])) {
+					this.validDistances.push(this.vgs[i]);
+				}
+			}
+		}
 
 		if (!isNaN(vg.altitude)) {
 			if ((this.highestVG == null) || (vg.altitude > this.highestVG.altitude)) {
@@ -212,6 +224,7 @@ class VGOrderCollection {
 			circle = L.circle([vg.latitude, vg.longitude], 0)
 		}
 
+		this.vgs.push(vg);
 		this.circlesLayerGroup.addLayer(circle);
 	}
 }
@@ -246,7 +259,7 @@ class VG1 extends VG {
 	}
 
 	validDistance(other) {
-		return between(this.distanceTo(other), 30, 60);
+		return between(super.distanceTo(other), 30, 60);
 	}
 }
 
@@ -256,7 +269,7 @@ class VG2 extends VG {
 	}
 
 	validDistance(other) {
-		return between(this.distanceTo(other), 20, 30);
+		return between(super.distanceTo(other), 20, 30);
 	}
 }
 
@@ -266,13 +279,17 @@ class VG3 extends VG {
 	}
 
 	validDistance(other) {
-		return between(this.distanceTo(other), 5, 10);
+		return between(super.distanceTo(other), 5, 10);
 	}
 }
 
 class VG4 extends VG {
 	constructor(name, type, altitude, latitude, longitude) {
 		super(name, 4, type, altitude, latitude, longitude);
+	}
+
+	validDistance(other) {
+		return true;
 	}
 }
 
@@ -286,7 +303,7 @@ class Map {
 		this.vgOrders = loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
 		this.populate(); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
-		this.lmap.on('click', this.toggleOffAltitudes);
+		this.lmap.on('click', () => this.toggleOffAltitudes(this.vgOrders));
 	}
 
 	/* Configures a specific map layer */
@@ -374,13 +391,6 @@ class Map {
 		return circle;
 	}
 
-	toggleOffAltitudes() {
-		console.log(this.vgOrders);
-		if (this.vgOrders[0].altitudeCirclesActive) {
-			this.toggleAltitudes();
-		}
-	}
-
 	toggleLayerGroupVisibility(order) {
 		let vgOrder = this.vgOrders[order];
 
@@ -427,10 +437,16 @@ class Map {
 
 		return highestVG;
 	}
+	
+	toggleOffAltitudes(vgOrders) {
+		if (vgOrders[0].altitudeCirclesActive) {
+			this.toggleAltitudes(vgOrders);
+		}
+	}
 
-	toggleAltitudes() {
-		for (let i in this.vgOrders) {
-			let order = this.vgOrders[i];
+	toggleAltitudes(vgOrders) {
+		for (let i in vgOrders) {
+			let order = vgOrders[i];
 
 			if (!order.altitudeCirclesActive) {
 				if (order.visible) {
@@ -445,6 +461,21 @@ class Map {
 
 			order.altitudeCirclesActive = !order.altitudeCirclesActive;
 		}
+	}
+
+	validateDistances() {
+		let invalidVGS = [];
+
+		for (let i in this.vgOrders) {
+			for (let j in this.vgOrders[i].vgs) {
+				let vg = this.vgOrders[i].vgs[j];
+				if (!this.vgOrders[i].validDistances.includes(vg)) {
+					invalidVGS.push(vg);
+				}
+			}
+		}
+
+		return invalidVGS;
 	}
 }
 
@@ -462,7 +493,7 @@ function toggleLayerGroupVisibility(order) {
 }
 
 function toggleAltitudes() {
-	map.toggleAltitudeIndicators();
+	map.toggleAltitudes(map.vgOrders);
 }
 
 function updateStatistics() {
@@ -498,11 +529,18 @@ function updateStatistics() {
 }
 
 function validateVGs() {
-	alert("Hello World!");
+	let invalidVGS = map.validateDistances();
+	let alertText = "VGs that do not respect order distances: \n\n";
+
+	for (let i in invalidVGS) {
+		alertText += invalidVGS[i].name + '\n';
+	}
+
+	alert(alertText);
 }
 
 function toggleAltitudes() {
-	map.toggleAltitudes();
+	map.toggleAltitudes(map.vgOrders);
 }
 
 function toggleClustering() {
