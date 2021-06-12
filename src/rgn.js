@@ -437,3 +437,15 @@ function updateStatistics() {
 	document.getElementById('highest_visible').innerHTML = highestVGName;
 	document.getElementById('lowest_visible').innerHTML = lowestVGName;
 }
+
+function validateVGs() {
+	alert("Hello World!");
+}
+
+function toggleAltitude() {
+	
+}
+
+function toggleClustering() {
+
+}
