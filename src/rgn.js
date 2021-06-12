@@ -110,7 +110,7 @@ function defaultVGPopup(vg) {
           	vg.latitude +
           	"<br/><b>Longitude:</b> " +
           	vg.longitude + 
-			'<br/><br/>Circle VGs Of Same Order <input type="checkbox" id="circleSameOrder" autocomplete="off" unchecked onchange="toggleCircleSameOrder();" />';
+			'<br/><input type="button" id="' + vg.name + 'circle_same_type" value="Circle VGs Of Same Type" onClick="circleVGsSameType(' + vg.name + ', ' + vg.type + ')"/>';
 }
 
 function loadRGN(filename) {
@@ -507,4 +507,8 @@ function toggleAltitudes() {
 
 function toggleClustering() {
 
+}
+
+function circleVGsSameType(vg) {
+	
 }
