@@ -208,7 +208,13 @@ class VGOrderCollection {
 			}
 		}
 
-		if (!isNaN(vg.altitude)) {
+		if (isNaN(vg.altitude)) {
+			circle = L.circle([vg.latitude, vg.longitude], 0, {
+				color: "transparent",
+				fillColor: "transparent",
+			})
+		}
+		else {
 			if ((this.highestVG == null) || (vg.altitude > this.highestVG.altitude)) {
 				this.highestVG = vg;
 			}
@@ -221,17 +227,30 @@ class VGOrderCollection {
 				color: "#88c0d0",
 				fillColor: "#8fbcbb",
 				fillOpacity: 0.4,
-			})
-		}
-		else {
-			circle = L.circle([vg.latitude, vg.longitude], 0, {
-				color: "transparent",
-				fillColor: "transparent",
-			})
+			});
 		}
 
 		this.vgs.push(vg);
 		this.altitudeCirclesLayerGroup.addLayer(circle);
+	}
+
+	addSameTypeCircles(name, type) {
+		for (let i in this.vgs) {
+			let vg = this.vgs[i];
+
+			if (vg.name != name && vg.type == type) {
+				this.sameTypeCirclesLayerGroup.addLayer(
+					L.circle([vg.latitude, vg.longitude], 500, {
+					color: "#bf616a",
+					fillColor: "#8fbcbb",
+					fillOpacity: 0.4,	
+				}));
+			}
+			else {
+				this.sameTypeCirclesLayerGroup.addLayer(
+					L.circle([vg.latitude, vg.longitude], 0));
+			}
+		}
 	}
 }
 
@@ -336,7 +355,7 @@ class Map {
 		// function calls
 		this.populate(); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
-		this.lmap.on('click', () => {this.toggleOffAltitudeCircles(); this.toggleOffSameTypeCircles();});
+		this.lmap.on('click', () => {this.toggleOffAltitudeCircles(); this.toggleSameTypeCircles("", "");});
 		this.altitudeCirclesActive = false;
 		this.sameTypeCirclesActive = false;
 	}
@@ -517,17 +536,15 @@ class Map {
 
 			if (this.sameTypeCirclesActive) {
 				this.sameTypeCirclesClusterGroup.removeLayer(order.sameTypeCirclesLayerGroup);
+				order.sameTypeCirclesLayerGroup.clearLayers();
 			}
 			else if (order.visible) {
-				this.sameTypeCirclesClusterGroup.addLayer(order.sameTypeCirclesLayerGroup)
+				this.vgOrders[i].addSameTypeCircles(name, type);
+				this.sameTypeCirclesClusterGroup.addLayer(order.sameTypeCirclesLayerGroup);
 			}
 		}
 
 		this.sameTypeCirclesActive = !this.sameTypeCirclesActive;
-	}
-
-	toggleOffSameTypeCircles() {
-
 	}
 }
 
