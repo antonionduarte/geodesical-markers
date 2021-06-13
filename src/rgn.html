@@ -72,6 +72,14 @@
 			display: none;
 		}
 
+		#highest_visible:hover {
+			cursor: pointer 
+		}
+
+		#lowest_visible {
+			cursor: pointer
+		}
+
 		#sidebar {
 			position: fixed; 
 			top: 10px; 
@@ -169,8 +177,8 @@
 				</tr>
 			</table>
 			&nbsp;&nbsp;&nbsp;&nbsp;<br>
-			&nbsp;&nbsp;&nbsp;&nbsp;<b>Highest Marker:</b> <span id='highest_visible'></span> <br>
-			&nbsp;&nbsp;&nbsp;&nbsp;<b>Lowest Marker:</b> <span id='lowest_visible'></span> <br>
+			&nbsp;&nbsp;&nbsp;&nbsp;<b>Highest Marker:</b> <span id='highest_visible' onclick="panToHighestVG()"></span> <br>
+			&nbsp;&nbsp;&nbsp;&nbsp;<b>Lowest Marker:</b> <span id='lowest_visible' onclick="panToLowestVG()"></span> <br>
 		</div>
 	</div>
 </body>
