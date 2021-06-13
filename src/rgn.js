@@ -452,7 +452,10 @@ class Map {
 			this.vgClusterGroup.removeLayer(vgOrder.layerGroup);
 			
 			if (this.altitudeCirclesActive) {
-				this.altitudeCirclesClusterGroup.removeLayer(vgOrder.altitudeCirclesLayerGroup)
+				this.altitudeCirclesClusterGroup.removeLayer(vgOrder.altitudeCirclesLayerGroup);
+			}
+			if (this.sameTypeCirclesActive) {
+				this.sameTypeCirclesClusterGroup.removeLayer(vgOrder.sameTypeCirclesLayerGroup);
 			}
 		}
 		else {
@@ -460,6 +463,9 @@ class Map {
 			
 			if (this.altitudeCirclesActive) {
 				this.altitudeCirclesClusterGroup.addLayer(vgOrder.altitudeCirclesLayerGroup)
+			}
+			if (this.sameTypeCirclesActive) {
+				this.sameTypeCirclesClusterGroup.addLayer(vgOrder.sameTypeCirclesLayerGroup);
 			}
 		}
 
