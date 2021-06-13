@@ -110,8 +110,8 @@ function defaultVGPopup(vg) {
           	vg.latitude +
           	"<br/><b>Longitude:</b> " +
           	vg.longitude + 
-						'<br/><input type="button" id="' + vg.name + 'circle_same_type" value="Circle VGs Of Same Type"' + 
-						'onclick="toggleSameTypeCircles("' + vg.name + '","' + vg.type + '")"/>';
+			'<br/><input type="button" id="' + vg.name + 'circle_same_type" value="Circle VGs Of Same Type"' + 
+			'onclick="toggleSameTypeCircles("' + vg.name + '","' + vg.type + '")"/>';
 }
 
 function loadRGN(filename) {
@@ -187,6 +187,8 @@ class VGOrderCollection {
 		this.lowestVG = null;
 		this.highestVG = null;
 		this.layerGroup = L.layerGroup();
+		this.altitudeCirclesVisible = false;
+		this.sameTypeCirclesVisible = false;
 		this.altitudeCirclesLayerGroup = L.layerGroup();
 		this.sameTypeCirclesLayerGroup = L.layerGroup();
 	}
