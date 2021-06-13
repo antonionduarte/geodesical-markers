@@ -98,20 +98,22 @@ function between(x, y, z) {
 
 function defaultVGPopup(vg) {
 	return "I'm the marker of VG <b>" +
-          	vg.name +
-          	"</b>.<br/>" +
-          	"<b>Order:</b> " +
-          	vg.order +
-          	"<br/><b>Type:</b> " +
-          	vg.type +
-		  	"<br/><b>Altitude:</b> " +
-          	vg.altitude +
-          	"<br/><b>Latitude:</b> " +
-          	vg.latitude +
-          	"<br/><b>Longitude:</b> " +
-          	vg.longitude + 
+			vg.name +
+			"</b>.<br/>" +
+			"<b>Order:</b> " +
+			vg.order +
+			"<br/><b>Type:</b> " +
+			vg.type +
+			"<br/><b>Altitude:</b> " +
+			vg.altitude +
+			"<br/><b>Latitude:</b> " +
+			vg.latitude +
+			"<br/><b>Longitude:</b> " +
+			vg.longitude + 
 			`<br/><input type="button" id="${vg.name}circle_same_type" value="Circle VGs Of Same Type" ` + 
-			`onclick="toggleSameTypeCircles('${vg.name}', '${vg.type}');"/>`;
+			`onclick="toggleSameTypeCircles('${vg.name}', '${vg.type}');"/>` + 
+			`<br/><input type="button" id="${vg.name}open_street_view" value="Open Street View" ` +
+			`onclick="openStreetView('${vg.latitude}', '${vg.longitude}');"/>`;
 }
 
 function loadRGN(filename) {
@@ -596,4 +598,8 @@ function toggleAltitudeCircles() {
 
 function toggleSameTypeCircles(name, type) {
 	map.toggleSameTypeCircles(name, type);
+}
+
+function openStreetView(latitude, longitude) {
+	window.open(`http://maps.google.com/maps?q=&layer=c&cbll=${latitude},${longitude}`)
 }
