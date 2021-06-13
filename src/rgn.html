@@ -27,7 +27,7 @@
 	<style>
 		html,
 		body {
-			font-family: 'Bitter', serif;
+			font-family: 'Helvetica';
 			font-size: 12px;
 			color: gainsboro;
 			height: 100%;
@@ -37,8 +37,8 @@
 		}
 
 		h2 {
-			font-family: 'Arial';
-			font-size: 15px;
+			font-family: 'Helvetica';
+			font-size: 16px;
 		}
 
 		.marker-cluster-small {
@@ -68,10 +68,34 @@
 			color: #fff !important;
 		}
 
+		#sidebar {
+			position: fixed; 
+			top: 10px; 
+			right: 10px; 
+			width: 250px; 
+			background: rgba(46, 52, 64, 0.8);
+			padding: 5px;
+			border-radius: 10px;
+		}
+
 		#statistics {
 			border-radius: 10px;
 			padding: 5px;
-			background-color: #3b4252;
+			background-color: #3b42528a;
+			box-shadow: 4px 4px 4px #2e3440;
+		}
+
+		#authors {
+			border-radius: 10px;
+			padding: 5px;
+			background-color: #3b42528a;
+			box-shadow: 4px 4px 4px #2e3440;
+		}
+
+		#control {
+			border-radius: 10px;
+			padding: 5px;
+			background-color: #3b42528a;
 			box-shadow: 4px 4px 4px #2e3440;
 		}
 
@@ -89,32 +113,35 @@
 <body onload="onLoad()">
 	<div id="mapid" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%;"></div>
 
-	<div style="position: fixed; top: 0px; bottom: 16px; right: 0px; width: 250px; background: rgba(46, 52, 64, 0.8)">
-		<h2>&nbsp;&nbsp;&nbsp;&nbsp;National Geodesic Markers</h2>
+	<div id="sidebar">
+		<span style="text-align: center;"><h2>National Geodesic Markers</h2></span>
 
-		<hr>
-		
-		<b>&nbsp;&nbsp;&nbsp;&nbsp;Authors:</b> <br><br>
-		&nbsp;&nbsp;&nbsp;&nbsp;Gonçalo Virgínia - 56773 <br />
-		&nbsp;&nbsp;&nbsp;&nbsp;António Duarte - 58278 <br />
+		<div id="authors">
+			<b>&nbsp;&nbsp;&nbsp;&nbsp;Authors:</b><br><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;Gonçalo Virgínia - 56773<br />
+			&nbsp;&nbsp;&nbsp;&nbsp;António Duarte - 58278<br />
+		</div>
 
-		<hr>
+		<br>
 
-		<b>&nbsp;&nbsp;&nbsp;&nbsp;Control:</b><br><br>
-		&nbsp;&nbsp;&nbsp;&nbsp;
-		<img src="resources/order1.png" alt="order1" />
-		<input type="checkbox" id="order1" autocomplete="off" checked onchange="toggleLayerGroupVisibility(0);"/>
-		<img src="resources/order2.png" alt="order2" />
-		<input type="checkbox" id="order2" autocomplete="off" checked onchange="toggleLayerGroupVisibility(1);"/>
-		<img src="resources/order3.png" alt="order3" />
-		<input type="checkbox" id="order3" autocomplete="off" checked onchange="toggleLayerGroupVisibility(2);"/>
-		<img src="resources/order4.png" alt="order4" />
-		<input type="checkbox" id="order4" autocomplete="off" checked onchange="toggleLayerGroupVisibility(3);"/>
-		<br/>
-		<br/>
-		&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" style="width: 90px" id="validade_vgs" value="Validate VGs" onclick="validateVGs()"/><br/><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" style="width: 90px" id="altitudes" value="Altitudes" onclick="toggleAltitudeCircles();"/><br/><br />
-		
+		<div id="control">
+			<b>&nbsp;&nbsp;&nbsp;&nbsp;Control:</b><br><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<img src="resources/order1.png" alt="order1" />
+			<input type="checkbox" id="order1" autocomplete="off" checked onchange="toggleLayerGroupVisibility(0);"/>
+			<img src="resources/order2.png" alt="order2" />
+			<input type="checkbox" id="order2" autocomplete="off" checked onchange="toggleLayerGroupVisibility(1);"/>
+			<img src="resources/order3.png" alt="order3" />
+			<input type="checkbox" id="order3" autocomplete="off" checked onchange="toggleLayerGroupVisibility(2);"/>
+			<img src="resources/order4.png" alt="order4" />
+			<input type="checkbox" id="order4" autocomplete="off" checked onchange="toggleLayerGroupVisibility(3);"/>
+			<br/>
+			<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" style="width: 90px" id="validade_vgs" value="Validate VGs" onclick="validateVGs()"/><br/><br />
+			&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" style="width: 90px" id="altitudes" value="Altitudes" onclick="toggleAltitudeCircles();"/><br/><br />
+		</div>
+
+		<br>
 		
 		<div id="statistics">
 			&nbsp;&nbsp;&nbsp;&nbsp;<b>Statistics:</b><br>
