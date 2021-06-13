@@ -547,10 +547,6 @@ class Map {
 		this.sameTypeCirclesActive = !this.sameTypeCirclesActive;
 	}
 
-	toggleOffSameTypeCircles() {
-
-	}
-
 	panToLowest() {
 		let lowest = this.getLowestVG(); 
 		this.lmap.flyTo([lowest.latitude, lowest.longitude], 17);
