@@ -145,16 +145,16 @@ function loadRGN(filename, map) {
 
 			switch (order) {
 				case '1':
-					vgOrders[0].addVG(new VG1(name, type, altitude, latitude, longitude, marker));
+					vgOrders[0].addVG(new VG1(name, type, parseFloat(altitude), parseFloat(latitude), parseFloat(longitude), marker));
 					break;
 				case '2':
-					vgOrders[1].addVG(new VG2(name, type, altitude, latitude, longitude, marker));
+					vgOrders[1].addVG(new VG2(name, type, parseFloat(altitude), parseFloat(latitude), parseFloat(longitude), marker));
 					break;
 				case '3':
-					vgOrders[2].addVG(new VG3(name, type, altitude, latitude, longitude, marker));
+					vgOrders[2].addVG(new VG3(name, type, parseFloat(altitude), parseFloat(latitude), parseFloat(longitude), marker));
 					break;
 				case '4':
-					vgOrders[3].addVG(new VG4(name, type, altitude, latitude, longitude, marker));
+					vgOrders[3].addVG(new VG4(name, type, parseFloat(altitude),parseFloat(latitude), parseFloat(longitude), marker));
 					break;
 			}
 		}
@@ -227,11 +227,11 @@ class VGOrderCollection {
 			})
 		}
 		else {
-			if ((this.highestVG == null) || (vg.altitude > this.highestVG.altitude)) {
+			if ((this.highestVG === null) || (vg.altitude > this.highestVG.altitude)) {
 				this.highestVG = vg;
 			}
 	
-			if ((this.lowestVG == null) || (vg.altitude < this.lowestVG.altitude)) {
+			if ((this.lowestVG === null) || (vg.altitude < this.lowestVG.altitude)) {
 				this.lowestVG = vg;
 			}
 
@@ -551,7 +551,7 @@ class Map {
 		let lowestVG = null;
 
 		for (let order in VG_ORDERS) {
-			if (this.vgOrders[order].visible && (lowestVG == null || 
+			if (this.vgOrders[order].visible && (lowestVG === null || 
 				this.vgOrders[order].lowestVG.altitude < lowestVG.altitude)) {
 				lowestVG = this.vgOrders[order].lowestVG;	
 			}
@@ -565,7 +565,7 @@ class Map {
 		let highestVG = null;
 
 		for (let order in VG_ORDERS) {
-			if (this.vgOrders[order].visible && (highestVG == null || 
+			if (this.vgOrders[order].visible && (highestVG === null || 
 				this.vgOrders[order].highestVG.altitude > highestVG.altitude)) {
 				highestVG = this.vgOrders[order].highestVG;	
 			}
