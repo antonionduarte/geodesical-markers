@@ -492,10 +492,12 @@ class Map {
 		let invalidVGS = [];
 
 		for (let i in this.vgOrders) {
-			for (let j in this.vgOrders[i].vgs) {
-				let vg = this.vgOrders[i].vgs[j];
-				if (!this.vgOrders[i].validDistances.includes(vg)) {
-					invalidVGS.push(vg);
+			if (this.vgOrders[i].visible) {
+				for (let j in this.vgOrders[i].vgs) {
+					let vg = this.vgOrders[i].vgs[j];
+					if (!this.vgOrders[i].validDistances.includes(vg)) {
+						invalidVGS.push(vg);
+					}
 				}
 			}
 		}
@@ -561,8 +563,13 @@ function validateVGs() {
 	let invalidVGS = map.validateDistances();
 	let alertText = "VGs that do not respect order distances: \n\n";
 
-	for (let i in invalidVGS) {
-		alertText += invalidVGS[i].name + '\n';
+	if (invalidVGS.length > 0) {
+		for (let i in invalidVGS) {
+			alertText += invalidVGS[i].name + '\n';
+		}
+	}
+	else {
+		alertText += 'There are no invalid VGs in the selected orders.'
 	}
 
 	alert(alertText);
