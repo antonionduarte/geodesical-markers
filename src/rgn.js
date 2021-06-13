@@ -284,16 +284,57 @@ class VG extends POI {
 class VG1 extends VG {
 	constructor(name, type, altitude, latitude, longitude, marker) {
 		super(name, 1, type, altitude, latitude, longitude, marker);
+		marker.on('click', () => this.updateVG1Popup(map));
 	}
 
 	validDistance(other) {
 		return between(super.distanceTo(other), 30, 60);
+	}
+
+	updateVG1Popup(currentMap) {
+		let total = 0;
+
+		for (let i in currentMap.vgOrders) {
+			let order = currentMap.vgOrders[i];
+
+			if (order.visible) {
+				for (let j in order.vgs) {
+					let currentVG = order.vgs[j];
+					
+					if (this.name != currentVG.name && this.distanceTo(currentVG) <= 60) {
+						total++;
+					}
+				}
+			}
+		}
+
+		this.marker.setPopupContent(defaultVGPopup(this) + `<br/><b>Total VGs within 60km:</b> ${total}`);
 	}
 }
 
 class VG2 extends VG {
 	constructor(name, type, altitude, latitude, longitude, marker) {
 		super(name, 2, type, altitude, latitude, longitude, marker);
+		marker.setPopupContent(defaultVGPopup(this) + `<br/><input type="button" id="${this.name}vg2_same_order" value="VG2's less 30km" ` + 
+		`onclick="closeSameOrder();"/>`);	
+	}
+
+	closeOrder2() {
+		closeOrder2 = [];
+
+		for (let i in map.vgOrders) {
+			let order = currentMap.vgOrders[1];
+
+			for (let j in order.vjs) {
+				let currentVG = order.vgs[j];
+
+				if (this.name != currentVG.name && this.distanceTo(currentVG) <= 30) {
+					this.closeOrder2.push(currentVG);
+				}
+			}
+		}
+
+		console.log(closeOrder2)
 	}
 
 	validDistance(other) {
@@ -557,26 +598,6 @@ class Map {
 	panToHighest() {
 		let highest = this.getHighestVG(); 
 		this.lmap.flyTo([highest.latitude, highest.longitude], 17);
-	}
-
-	updateVG1Popup(vg) {
-		let total = 0;
-
-		for (let i in this.vgOrders) {
-			let order = this.vgOrders[i];
-
-			if (order.visible) {
-				for (let j in order.vgs) {
-					let currentVG = order.vgs[j];
-					
-					if (vg.name != currentVG.name && vg.distanceTo(currentVG) <= 60) {
-						total++;
-					}
-				}
-			}
-		}
-
-		vg.marker.setPopupContent(defaultVGPopup(vg) + `<br/>Total VGs within 60km: ${total}`);
 	}
 }
 
