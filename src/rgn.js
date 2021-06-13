@@ -187,8 +187,6 @@ class VGOrderCollection {
 		this.lowestVG = null;
 		this.highestVG = null;
 		this.layerGroup = L.layerGroup();
-		this.altitudeCirclesVisible = false;
-		this.sameTypeCirclesVisible = false;
 		this.altitudeCirclesLayerGroup = L.layerGroup();
 		this.sameTypeCirclesLayerGroup = L.layerGroup();
 	}
@@ -319,10 +317,19 @@ class Map {
 				});
 			}
 		});
+		this.sameTypeCirclesClusterGroup = L.markerClusterGroup({
+			iconCreateFunction: function() {
+				return L.divIcon({
+					html:"",
+					className: "" 
+				});
+			}
+		});
 
 		// layers
 		this.lmap.addLayer(this.vgClusterGroup);
 		this.lmap.addLayer(this.altitudeCirclesClusterGroup);
+		this.lmap.addLayer(this.sameTypeCirclesClusterGroup);
 
 		// function calls
 		this.populate(); // populates everything with VGs and their respective markers
@@ -477,11 +484,8 @@ class Map {
 			if (this.altitudeCirclesActive) {
 				this.altitudeCirclesClusterGroup.removeLayer(order.altitudeCirclesLayerGroup);
 			}
-			else {
-				if (order.visible) {
-					this.altitudeCirclesClusterGroup.addLayer(order.altitudeCirclesLayerGroup);
-					order.altitudeCirclesVisible = true;
-				}
+			else if (order.visible) {
+				this.altitudeCirclesClusterGroup.addLayer(order.altitudeCirclesLayerGroup);
 			}
 		}
 
@@ -506,7 +510,18 @@ class Map {
 	}
 
 	toggleSameTypeCircles(name, type) {
+		for (let i in this.vgOrders) {
+			let order = this.vgOrders[i];
 
+			if (this.sameTypeCirclesActive) {
+				this.sameTypeCirclesClusterGroup.removeLayer(order.sameTypeCirclesLayerGroup);
+			}
+			else if (order.visible) {
+				this.sameTypeCirclesClusterGroup.addLayer(order.sameTypeCirclesLayerGroup)
+			}
+		}
+
+		this.sameTypeCirclesActive = !this.sameTypeCirclesActive;
 	}
 
 	toggleOffSameTypeCircles() {
@@ -580,7 +595,5 @@ function toggleAltitudeCircles() {
 }
 
 function toggleSameTypeCircles(name, type) {
-	alert("nibba");
-
 	map.toggleSameTypeCircles(name, type);
 }
