@@ -116,6 +116,10 @@ function defaultVGPopup(vg) {
 			`onclick="openStreetView('${vg.latitude}', '${vg.longitude}');"/>`;
 }
 
+/* 
+	Function responsible for loading the VG information from the XML file,
+	and creating VG's of the specified Order in the XML.
+*/
 function loadRGN(filename, map) {
 	let xmlDoc = loadXMLDoc(filename);
 	let xs = getAllValuesByTagName(xmlDoc, "vg");
@@ -183,6 +187,7 @@ function loadIcons(dir) {
 
 /* Collections */
 
+/* Class that stores all the VG's from a specific order */
 class VGOrderCollection {
 	constructor() {
 		this.vgs = [];
@@ -196,6 +201,10 @@ class VGOrderCollection {
 		this.sameOrderCirclesLayerGroup = L.layerGroup();
 	}
 
+	/* 
+		Function that adds a VG and updates all the variables in the class
+		to take the new VG in consideration.
+	*/
 	addVG(vg) {
 		let circle;
 
@@ -237,6 +246,7 @@ class VGOrderCollection {
 		this.altitudeCirclesLayerGroup.addLayer(circle);
 	}
 
+	/* That adds circles to the VGs of the same type. */
 	addSameTypeCircles(type) {
 		for (let i in this.vgs) {
 			let vg = this.vgs[i];
@@ -411,7 +421,7 @@ class Map {
 		this.lmap.addLayer(this.sameTypeCirclesClusterGroup);
 		this.lmap.addLayer(this.sameOrderCirclesClusterGroup)
 
-		// function calls
+		// function calls and click handlers
 		this.populate(); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
 		this.lmap.on('click', () => {this.toggleOffAltitudeCircles(); this.toggleSameTypeCircles(""); this.toggleSameOrderCircles("", "");});
@@ -484,6 +494,7 @@ class Map {
 		return this.lmap.on("click", handler2);
 	}
 
+	/* Adds a circle to the map */
 	addCircle(pos, radius, popup) {
 		let circle = L.circle(pos, radius, {
 			color: "red",
@@ -498,6 +509,10 @@ class Map {
 		return circle;
 	}
 
+	/* 
+		Handles the removal and addition of LayerGroups to Clusters,
+		associated with the toggling of VG orders.
+	*/
 	toggleLayerGroupVisibility(order) {
 		let vgOrder = this.vgOrders[order];
 
@@ -531,6 +546,7 @@ class Map {
 		this.vgOrders[order].visible = !this.vgOrders[order].visible;
 	}
 
+	/* Returns the lowest VG amongst the currently visible VGs */
 	getLowestVG() {
 		let lowestVG = null;
 
@@ -544,6 +560,7 @@ class Map {
 		return lowestVG;
 	}
 
+	/* Returns the highest VG amongst the currently visible VGs */
 	getHighestVG() {
 		let highestVG = null;
 
@@ -557,12 +574,14 @@ class Map {
 		return highestVG;
 	}
 	
+	/* Toggles off the altitude circles */
 	toggleOffAltitudeCircles() {
 		if (this.altitudeCirclesActive) {
 			this.toggleAltitudeCircles(this.vgOrders);
 		}
 	}
 
+	/* Toggles altitude circles, and handles the layers and clusters associated with them */
 	toggleAltitudeCircles() {
 		for (let i in this.vgOrders) {
 			let order = this.vgOrders[i];
@@ -578,6 +597,7 @@ class Map {
 		this.altitudeCirclesActive = !this.altitudeCirclesActive;
 	}
 
+	/* Determines  which VGs are invalid and returns a list */
 	validateDistances() {
 		let invalidVGS = [];
 
@@ -595,6 +615,7 @@ class Map {
 		return invalidVGS;
 	}
 
+	/* Handles toggling clustering for the Circles of same type geodesic markers */
 	toggleSameTypeCircles(type) {
 		for (let i in this.vgOrders) {
 			let order = this.vgOrders[i];
@@ -612,11 +633,13 @@ class Map {
 		this.sameTypeCirclesActive = !this.sameTypeCirclesActive;
 	}
 
+	/* Pans to the lowest VG in the map */
 	panToLowest() {
 		let lowest = this.getLowestVG(); 
 		this.lmap.flyTo([lowest.latitude, lowest.longitude], 17);
 	}
 
+	/* Pans to the highest VG in the map */
 	panToHighest() {
 		let highest = this.getHighestVG(); 
 		this.lmap.flyTo([highest.latitude, highest.longitude], 17);
@@ -642,17 +665,20 @@ class Map {
 
 /* Functions for HTML */
 
+/* Function called when the map loads */
 function onLoad() {
 	map = new Map(MAP_CENTRE, 12);
 	map.addCircle(MAP_CENTRE, 100, "FCT/UNL");
 	updateStatistics();
 }
 
+/* Function to toggle the visibility of a group layer */
 function toggleLayerGroupVisibility(order) {
 	map.toggleLayerGroupVisibility(order);
 	updateStatistics();
 }
 
+/* Function that updates the statistics in the control panel HTML */
 function updateStatistics() {
 	// visible markers
 	let totalVisibleMarkers = 0;
@@ -685,6 +711,7 @@ function updateStatistics() {
 	document.getElementById('lowest_visible').innerHTML = lowestVGName;
 }
 
+/* Function that validates VGs and Displays an Alert */
 function validateVGs() {
 	let invalidVGS = map.validateDistances();
 	let alertText = "VGs that do not respect order distances: \n\n";
@@ -701,22 +728,27 @@ function validateVGs() {
 	alert(alertText);
 }
 
+/* Function called from HTML that toggles altitude circles */
 function toggleAltitudeCircles() {
 	map.toggleAltitudeCircles();
 }
 
+/* Function that toggles same type circles, called from HTML */
 function toggleSameTypeCircles(type) {
 	map.toggleSameTypeCircles(type);
 }
 
+/* Function that pans to the lowest VG called from HTML */
 function panToLowestVG() {
 	map.panToLowest();
 }
 
+/* Function that pans to the highest VG called from HTML */
 function panToHighestVG() {
 	map.panToHighest();
 }
 
+/* Function that opens google street view in a given latitude and longitude */
 function openStreetView(latitude, longitude) {
 	window.open(`http://maps.google.com/maps?q=&layer=c&cbll=${latitude},${longitude}`)
 }
