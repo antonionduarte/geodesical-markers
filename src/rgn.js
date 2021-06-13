@@ -111,7 +111,7 @@ function defaultVGPopup(vg) {
 			"<br/><b>Longitude:</b> " +
 			vg.longitude + 
 			`<br/><input type="button" id="${vg.name}circle_same_type" value="Circle VGs Of Same Type" ` + 
-			`onclick="toggleSameTypeCircles('${vg.name}', '${vg.type}');"/>` + 
+			`onclick="toggleSameTypeCircles('${vg.type}');"/>` + 
 			`<br/><input type="button" id="${vg.name}open_street_view" value="Open Street View" ` +
 			`onclick="openStreetView('${vg.latitude}', '${vg.longitude}');"/>`;
 }
@@ -234,11 +234,11 @@ class VGOrderCollection {
 		this.altitudeCirclesLayerGroup.addLayer(circle);
 	}
 
-	addSameTypeCircles(name, type) {
+	addSameTypeCircles(type) {
 		for (let i in this.vgs) {
 			let vg = this.vgs[i];
 
-			if (vg.name != name && vg.type == type) {
+			if (vg.type == type) {
 				this.sameTypeCirclesLayerGroup.addLayer(
 					L.circle([vg.latitude, vg.longitude], 500, {
 					color: "#bf616a",
@@ -530,7 +530,7 @@ class Map {
 		return invalidVGS;
 	}
 
-	toggleSameTypeCircles(name, type) {
+	toggleSameTypeCircles(type) {
 		for (let i in this.vgOrders) {
 			let order = this.vgOrders[i];
 
@@ -539,7 +539,7 @@ class Map {
 				order.sameTypeCirclesLayerGroup.clearLayers();
 			}
 			else if (order.visible) {
-				this.vgOrders[i].addSameTypeCircles(name, type);
+				this.vgOrders[i].addSameTypeCircles(type);
 				this.sameTypeCirclesClusterGroup.addLayer(order.sameTypeCirclesLayerGroup);
 			}
 		}
@@ -623,8 +623,8 @@ function toggleAltitudeCircles() {
 	map.toggleAltitudeCircles();
 }
 
-function toggleSameTypeCircles(name, type) {
-	map.toggleSameTypeCircles(name, type);
+function toggleSameTypeCircles(type) {
+	map.toggleSameTypeCircles(type);
 }
 
 function panToLowestVG() {
