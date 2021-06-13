@@ -558,6 +558,26 @@ class Map {
 		let highest = this.getHighestVG(); 
 		this.lmap.flyTo([highest.latitude, highest.longitude], 17);
 	}
+
+	updateVG1Popup(vg) {
+		let total = 0;
+
+		for (let i in this.vgOrders) {
+			let order = this.vgOrders[i];
+
+			if (order.visible) {
+				for (let j in order.vgs) {
+					let currentVG = order.vgs[j];
+					
+					if (vg.name != currentVG.name && vg.distanceTo(currentVG) <= 60) {
+						total++;
+					}
+				}
+			}
+		}
+
+		vg.marker.setPopupContent(defaultVGPopup(vg) + `<br/>Total VGs within 60km: ${total}`);
+	}
 }
 
 /* Functions for HTML */
