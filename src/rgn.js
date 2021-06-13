@@ -342,7 +342,7 @@ class Map {
 			iconCreateFunction: function() {
 				return L.divIcon({
 					html:"",
-					className: "" 
+					className: ""
 				});
 			}
 		});
@@ -546,6 +546,20 @@ class Map {
 
 		this.sameTypeCirclesActive = !this.sameTypeCirclesActive;
 	}
+
+	toggleOffSameTypeCircles() {
+
+	}
+
+	panToLowest() {
+		let lowest = this.getLowestVG(); 
+		this.lmap.flyTo([lowest.latitude, lowest.longitude], 17);
+	}
+
+	panToHighest() {
+		let highest = this.getHighestVG(); 
+		this.lmap.flyTo([highest.latitude, highest.longitude], 17);
+	}
 }
 
 /* Functions for HTML */
@@ -615,6 +629,14 @@ function toggleAltitudeCircles() {
 
 function toggleSameTypeCircles(name, type) {
 	map.toggleSameTypeCircles(name, type);
+}
+
+function panToLowestVG() {
+	map.panToLowest();
+}
+
+function panToHighestVG() {
+	map.panToHighest();
 }
 
 function openStreetView(latitude, longitude) {
