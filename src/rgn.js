@@ -110,8 +110,8 @@ function defaultVGPopup(vg) {
           	vg.latitude +
           	"<br/><b>Longitude:</b> " +
           	vg.longitude + 
-			'<br/><input type="button" id="' + vg.name + 'circle_same_type" value="Circle VGs Of Same Type"' + 
-			'onclick="toggleSameTypeCircles("' + vg.name + '","' + vg.type + '")"/>';
+			`<br/><input type="button" id="${vg.name}circle_same_type" value="Circle VGs Of Same Type" ` + 
+			`onclick="toggleSameTypeCircles('${vg.name}', '${vg.type}');"/>`;
 }
 
 function loadRGN(filename) {
@@ -505,7 +505,7 @@ class Map {
 		return invalidVGS;
 	}
 
-	toggleSameTypeCircles(vg) {
+	toggleSameTypeCircles(name, type) {
 
 	}
 
@@ -580,5 +580,7 @@ function toggleAltitudeCircles() {
 }
 
 function toggleSameTypeCircles(name, type) {
+	alert("nibba");
+
 	map.toggleSameTypeCircles(name, type);
 }
