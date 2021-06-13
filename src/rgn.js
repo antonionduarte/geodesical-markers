@@ -572,6 +572,6 @@ function toggleAltitudeCircles() {
 	map.toggleAltitudeCircles();
 }
 
-function toggleSameTypeCircles(vg) {
-	map.toggleSameTypeCircles(vg);
+function toggleSameTypeCircles(name, type) {
+	map.toggleSameTypeCircles(name, type);
 }
