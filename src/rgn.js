@@ -116,7 +116,7 @@ function defaultVGPopup(vg) {
 			`onclick="openStreetView('${vg.latitude}', '${vg.longitude}');"/>`;
 }
 
-function loadRGN(filename) {
+function loadRGN(filename, map) {
 	let xmlDoc = loadXMLDoc(filename);
 	let xs = getAllValuesByTagName(xmlDoc, "vg");
 	let vgOrders = [];
@@ -132,23 +132,25 @@ function loadRGN(filename) {
 	else {
 		for (let i = 0; i < xs.length; i++) {
 			let name = getFirstValueByTagName(xs[i], "name"),
+				order = getFirstValueByTagName(xs[i], "order"),
 				type = getFirstValueByTagName(xs[i], "type"),
 				altitude = getFirstValueByTagName(xs[i], "altitude"),
 				latitude = getFirstValueByTagName(xs[i], "latitude"),
-				longitude = getFirstValueByTagName(xs[i], "longitude");
+				longitude = getFirstValueByTagName(xs[i], "longitude"),
+				marker = L.marker([latitude, longitude], {icon: map.icons["order" + order]}).bindTooltip(name);
 
-			switch (getFirstValueByTagName(xs[i], "order")) {
+			switch (order) {
 				case '1':
-					vgOrders[0].addVG(new VG1(name, type, altitude, latitude, longitude));
+					vgOrders[0].addVG(new VG1(name, type, altitude, latitude, longitude, marker));
 					break;
 				case '2':
-					vgOrders[1].addVG(new VG2(name, type, altitude, latitude, longitude));
+					vgOrders[1].addVG(new VG2(name, type, altitude, latitude, longitude, marker));
 					break;
 				case '3':
-					vgOrders[2].addVG(new VG3(name, type, altitude, latitude, longitude));
+					vgOrders[2].addVG(new VG3(name, type, altitude, latitude, longitude, marker));
 					break;
 				case '4':
-					vgOrders[3].addVG(new VG4(name, type, altitude, latitude, longitude));
+					vgOrders[3].addVG(new VG4(name, type, altitude, latitude, longitude, marker));
 					break;
 			}
 		}
@@ -257,20 +259,21 @@ class VGOrderCollection {
 /* POI */
 
 class POI {
-	constructor(name, latitude, longitude) {
+	constructor(name, latitude, longitude, marker) {
 		this.name = name;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.marker = marker;
 	}
 }
 
 class VG extends POI {
-	constructor(name, order, type, altitude, latitude, longitude) {
-		super(name, latitude, longitude);
+	constructor(name, order, type, altitude, latitude, longitude, marker) {
+		super(name, latitude, longitude, marker);
 		this.order = order;
 		this.type = type;
 		this.altitude = altitude;
-		this.marker;
+		this.marker.bindPopup(defaultVGPopup(this));
 	}
 
 	distanceTo(other) {
@@ -279,8 +282,8 @@ class VG extends POI {
 }
 
 class VG1 extends VG {
-	constructor(name, type, altitude, latitude, longitude) {
-		super(name, 1, type, altitude, latitude, longitude);
+	constructor(name, type, altitude, latitude, longitude, marker) {
+		super(name, 1, type, altitude, latitude, longitude, marker);
 	}
 
 	validDistance(other) {
@@ -289,8 +292,8 @@ class VG1 extends VG {
 }
 
 class VG2 extends VG {
-	constructor(name, type, altitude, latitude, longitude) {
-		super(name, 2, type, altitude, latitude, longitude);
+	constructor(name, type, altitude, latitude, longitude, marker) {
+		super(name, 2, type, altitude, latitude, longitude, marker);
 	}
 
 	validDistance(other) {
@@ -299,8 +302,8 @@ class VG2 extends VG {
 }
 
 class VG3 extends VG {
-	constructor(name, type, altitude, latitude, longitude) {
-		super(name, 3, type, altitude, latitude, longitude);
+	constructor(name, type, altitude, latitude, longitude, marker) {
+		super(name, 3, type, altitude, latitude, longitude, marker);
 	}
 
 	validDistance(other) {
@@ -309,8 +312,8 @@ class VG3 extends VG {
 }
 
 class VG4 extends VG {
-	constructor(name, type, altitude, latitude, longitude) {
-		super(name, 4, type, altitude, latitude, longitude);
+	constructor(name, type, altitude, latitude, longitude, marker) {
+		super(name, 4, type, altitude, latitude, longitude, marker);
 	}
 
 	validDistance(other) {
@@ -326,7 +329,7 @@ class Map {
 		this.lmap = L.map(MAP_ID).setView(center, zoom); // creates the map with the specific view
 		this.addBaseLayers(MAP_LAYERS); // the several different "map styles", such as satellite, streets etc ...
 		this.icons = loadIcons(RESOURCES_DIR); // loads the icons
-		this.vgOrders = loadRGN(RESOURCES_DIR + RGN_FILE_NAME);
+		this.vgOrders = loadRGN(RESOURCES_DIR + RGN_FILE_NAME, this);
 
 		// cluster groups
 		this.vgClusterGroup = L.markerClusterGroup();
@@ -403,22 +406,15 @@ class Map {
 	populate() {
 		for (let i in this.vgOrders) {
 			for (let j in this.vgOrders[i].vgs) {
-				this.addMarker(this.icons, this.vgOrders[i].vgs[j]);
+				this.addMarker(this.vgOrders[i].vgs[j]);
 			}
 			
 			this.vgClusterGroup.addLayer(this.vgOrders[i].layerGroup);
 		}
 	}
 
-	addMarker(icons, vg) {
-		let marker = L.marker([vg.latitude, vg.longitude], {
-			icon: icons["order" + vg.order],
-		});
-		
-		marker.bindPopup(defaultVGPopup(vg)).bindTooltip(vg.name);
-
-		vg.marker = marker;
-		this.vgOrders[vg.order - 1].layerGroup.addLayer(marker);
+	addMarker(vg) {
+		this.vgOrders[vg.order-1].layerGroup.addLayer(vg.marker);
 	}
 
 	addClickHandler(handler) {
