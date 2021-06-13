@@ -193,6 +193,7 @@ class VGOrderCollection {
 		this.layerGroup = L.layerGroup();
 		this.altitudeCirclesLayerGroup = L.layerGroup();
 		this.sameTypeCirclesLayerGroup = L.layerGroup();
+		this.sameOrderCirclesLayerGroup = L.layerGroup();
 	}
 
 	addVG(vg) {
@@ -251,6 +252,29 @@ class VGOrderCollection {
 			else {
 				this.sameTypeCirclesLayerGroup.addLayer(
 					L.circle([vg.latitude, vg.longitude], 0));
+			}
+		}
+	}
+
+	addSameOrderCircles(name, order) {
+		if (this.vgs.length > 0 && this.vgs[0].order == order) {
+			for (let i in this.vgs) {
+				let vg = this.vgs[i];
+
+				if (vg.name != name) {
+					this.sameOrderCirclesLayerGroup.addLayer(L.circle([vg.latitude, vg.longitude], 500, {
+					color: "#a3be8c",
+					fillColor: "#a3be8c",
+					fillOpacity: 0.4,	
+					}));
+				}
+			}
+		}
+		else {
+			for (let i in this.vgs) {
+				let vg = this.vgs[i];
+				this.sameOrderCirclesLayerGroup.addLayer(
+					L.circle([vg.latitude, vg.longitude], 0));	
 			}
 		}
 	}
@@ -315,26 +339,8 @@ class VG1 extends VG {
 class VG2 extends VG {
 	constructor(name, type, altitude, latitude, longitude, marker) {
 		super(name, 2, type, altitude, latitude, longitude, marker);
-		marker.setPopupContent(defaultVGPopup(this) + `<br/><input type="button" id="${this.name}vg2_same_order" value="VG2's less 30km" ` + 
-		`onclick="closeSameOrder();"/>`);	
-	}
-
-	closeOrder2() {
-		closeOrder2 = [];
-
-		for (let i in map.vgOrders) {
-			let order = currentMap.vgOrders[1];
-
-			for (let j in order.vjs) {
-				let currentVG = order.vgs[j];
-
-				if (this.name != currentVG.name && this.distanceTo(currentVG) <= 30) {
-					this.closeOrder2.push(currentVG);
-				}
-			}
-		}
-
-		console.log(closeOrder2)
+		marker.setPopupContent(defaultVGPopup(this) + `<br/><input type="button" id="${this.name}vg2_same_order" value="Circle VGs Of Same Order Within 30km" ` + 
+		`onclick="toggleSameOrderCircles('${this.name}', '${this.order}');"/>`);	
 	}
 
 	validDistance(other) {
@@ -390,18 +396,28 @@ class Map {
 				});
 			}
 		});
+		this.sameOrderCirclesClusterGroup = L.markerClusterGroup({
+			iconCreateFunction: function() {
+				return L.divIcon({
+					html:"",
+					className: ""
+				});
+			}
+		});
 
 		// layers
 		this.lmap.addLayer(this.vgClusterGroup);
 		this.lmap.addLayer(this.altitudeCirclesClusterGroup);
 		this.lmap.addLayer(this.sameTypeCirclesClusterGroup);
+		this.lmap.addLayer(this.sameOrderCirclesClusterGroup)
 
 		// function calls
 		this.populate(); // populates everything with VGs and their respective markers
 		this.addClickHandler((e) => L.popup().setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()));
-		this.lmap.on('click', () => {this.toggleOffAltitudeCircles(); this.toggleSameTypeCircles("", "");});
+		this.lmap.on('click', () => {this.toggleOffAltitudeCircles(); this.toggleSameTypeCircles(""); this.toggleSameOrderCircles("", "");});
 		this.altitudeCirclesActive = false;
 		this.sameTypeCirclesActive = false;
+		this.sameOrderCirclesActive = false;
 	}
 
 	/* Configures a specific map layer */
@@ -494,6 +510,9 @@ class Map {
 			if (this.sameTypeCirclesActive) {
 				this.sameTypeCirclesClusterGroup.removeLayer(vgOrder.sameTypeCirclesLayerGroup);
 			}
+			if (this.sameOrderCirclesActive) {
+				this.sameOrderCirclesClusterGroup.removeLayer(vgOrder.sameOrderCirclesLayerGroup);
+			}
 		}
 		else {
 			this.vgClusterGroup.addLayer(vgOrder.layerGroup);
@@ -503,6 +522,9 @@ class Map {
 			}
 			if (this.sameTypeCirclesActive) {
 				this.sameTypeCirclesClusterGroup.addLayer(vgOrder.sameTypeCirclesLayerGroup);
+			}
+			if (this.sameOrderCirclesActive) {
+				this.sameOrderCirclesClusterGroup.addLayer(vgOrder.sameOrderCirclesLayerGroup);
 			}
 		}
 
@@ -582,7 +604,7 @@ class Map {
 				order.sameTypeCirclesLayerGroup.clearLayers();
 			}
 			else if (order.visible) {
-				this.vgOrders[i].addSameTypeCircles(type);
+				order.addSameTypeCircles(type);
 				this.sameTypeCirclesClusterGroup.addLayer(order.sameTypeCirclesLayerGroup);
 			}
 		}
@@ -598,6 +620,23 @@ class Map {
 	panToHighest() {
 		let highest = this.getHighestVG(); 
 		this.lmap.flyTo([highest.latitude, highest.longitude], 17);
+	}
+
+	toggleSameOrderCircles(name, order) {
+		for (let i in this.vgOrders) {
+			let currentOrder = this.vgOrders[i];
+
+			if (this.sameOrderCirclesActive) {
+				this.sameOrderCirclesClusterGroup.removeLayer(currentOrder.sameOrderCirclesLayerGroup);
+				currentOrder.sameOrderCirclesLayerGroup.clearLayers();
+			}
+			else if (currentOrder.visible) {
+				currentOrder.addSameOrderCircles(name, order);
+				this.sameOrderCirclesClusterGroup.addLayer(currentOrder.sameOrderCirclesLayerGroup);
+			}
+		}
+
+		this.sameOrderCirclesActive = !this.sameOrderCirclesActive;
 	}
 }
 
@@ -680,4 +719,8 @@ function panToHighestVG() {
 
 function openStreetView(latitude, longitude) {
 	window.open(`http://maps.google.com/maps?q=&layer=c&cbll=${latitude},${longitude}`)
+}
+
+function toggleSameOrderCircles(name, order) {
+	map.toggleSameOrderCircles(name, order);
 }
