@@ -273,9 +273,9 @@ class VGOrderCollection {
 
 				if (vg.name != name) {
 					this.sameOrderCirclesLayerGroup.addLayer(L.circle([vg.latitude, vg.longitude], 500, {
-					color: "#a3be8c",
-					fillColor: "#a3be8c",
-					fillOpacity: 0.4,	
+						color: "#a3be8c",
+						fillColor: "#a3be8c",
+						fillOpacity: 0.4,	
 					}));
 				}
 			}
@@ -533,7 +533,7 @@ class Map {
 			this.vgClusterGroup.addLayer(vgOrder.layerGroup);
 			
 			if (this.altitudeCirclesActive) {
-				this.altitudeCirclesClusterGroup.addLayer(vgOrder.altitudeCirclesLayerGroup)
+				this.altitudeCirclesClusterGroup.addLayer(vgOrder.altitudeCirclesLayerGroup);
 			}
 			if (this.sameTypeCirclesActive) {
 				this.sameTypeCirclesClusterGroup.addLayer(vgOrder.sameTypeCirclesLayerGroup);
